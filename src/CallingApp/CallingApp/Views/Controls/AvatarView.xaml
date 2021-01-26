@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CallingApp.AvatarView">
+
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="{x:Type Label}">
+                <Setter Property="FontSize" Value="17"/>
+                <Setter Property="Text" Value="{Binding CurrentPerson.Name}"/>
+            </Style>
+        </Grid.Resources>
+        
+        <AbsoluteLayout>
+            <Grid x:Name="imageGrid" SizeChanged="UpdatePositions"
+                  VerticalOptions="Start" HorizontalOptions="Start"
+                  HeightRequest="80" WidthRequest="80">
+                <Image x:Name="image" Source="{Binding CurrentPerson.Image, Converter={StaticResource ImageSourceConverter}}" Aspect="AspectFill"
+                       BackgroundColor="White">
+                    <Image.Clip>
+                        <EllipseGeometry Center="40,40" RadiusX="39" RadiusY="39"/>
+                    </Image.Clip>
+                </Image>
+                <Ellipse Stroke="{StaticResource OverlayBrush}" StrokeThickness="4"/>
+            </Grid>
+            <Frame x:Name="topLabelFrame" Padding="0" HasShadow="False" IsClippedToBounds="True"
+                   BackgroundColor="Transparent"
+                   HorizontalOptions="Start" VerticalOptions="Start">
+                <Label x:Name="topLabel" 
+                       TextColor="{StaticResource OverlayColor}"
+                       HorizontalOptions="Start" VerticalOptions="Start"
+                       SizeChanged="UpdatePositions"/>
+            </Frame>
+        </AbsoluteLayout>
+
+        <Label x:Name="centerLabel" 
+               TextColor="{StaticResource BackgroundColor}"
+               HorizontalOptions="Center" VerticalOptions="Center"
+               TranslationY="65"/>
+    </Grid>
+</ContentView>
