@@ -1,15 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
              xmlns:local="clr-namespace:CallingApp"
              x:Class="CallingApp.CallView">
     <Grid RowDefinitions="*,90,100" RowSpacing="0">
-        <skia:SKCanvasView x:Name="canvasView" Grid.RowSpan="3" PaintSurface="CanvasViewPaintSurface"
-                           SizeChanged="CanvasViewSizeChanged"
-                           IsVisible="false"/>
-
         <Path x:Name="overlayPath" Grid.RowSpan="3" Fill="{StaticResource OverlayBrush}" 
+              SizeChanged="CanvasViewSizeChanged"
               HorizontalOptions="Fill" VerticalOptions="Fill"/>
 
         <Grid x:Name="buttonsGrid" Grid.Row="1" ColumnDefinitions="*,*,*" ColumnSpacing="0" 

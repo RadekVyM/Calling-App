@@ -1,9 +1,6 @@
-﻿using SkiaSharp;
-using SkiaSharp.Views.Forms;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Shapes;
 using Xamarin.Forms.Xaml;
@@ -17,22 +14,19 @@ namespace CallingApp
 
         int numberOfPoints => 22;
         int numberOfHiddenPoints => 4;
-        SKPoint upVector;
-        SKPoint downVector;
-        SKPoint firstPointOffsetVector;
-        SKPoint firstPoint;
-        SKPoint pointToPointVector;
-        float visibleLineLength => (float)Math.Sqrt(Math.Pow(heightPx, 2) + Math.Pow(widthPx, 2));
-        float entireLineLength => visibleLineLength + (pointsDistance * numberOfHiddenPoints);
-        float pointsDistance => visibleLineLength / (numberOfPoints - numberOfHiddenPoints - 1);
-        float heightPx => (float)(canvasView.Height * DeviceDisplay.MainDisplayInfo.Density);
-        float widthPx => (float)(canvasView.Width * DeviceDisplay.MainDisplayInfo.Density);
+        Point upVector;
+        Point downVector;
+        Point firstPointOffsetVector;
+        Point firstPoint;
+        Point pointToPointVector;
+        double visibleLineLength => (double)Math.Sqrt(Math.Pow(overlayPath.Height, 2) + Math.Pow(overlayPath.Width, 2));
+        double entireLineLength => visibleLineLength + (pointsDistance * numberOfHiddenPoints);
+        double pointsDistance => visibleLineLength / (numberOfPoints - numberOfHiddenPoints - 1);
         bool isWaveAnimating;
         bool isOnThePhone = false;
         bool isHangedUp = true;
-        SKPaint paint;
-        float waveVectorScale = 0;
-        float maxWaveVectorScale => 0.4f;
+        double waveVectorScale = 0;
+        double maxWaveVectorScale => 0.4f;
         Point overlayTopLeftPoint = new Point(0, 0);
         Point minOverlayTopLeftPoint => new Point(0, 0.7d * Height);
         Point maxOverlayTopLeftPoint => new Point(0, minOverlayTopLeftPoint.Y + 20);
@@ -48,13 +42,6 @@ namespace CallingApp
 
         public CallView()
         {
-            paint = new SKPaint
-            {
-                Color = App.Current.Resources.GetValue<Color>("OverlayColor").ToSKColor(),
-                StrokeWidth = 4,
-                Style = SKPaintStyle.Fill
-            };
-
             InitializeComponent();
         }
 
@@ -67,38 +54,25 @@ namespace CallingApp
 
         private void CanvasViewSizeChanged(object sender, EventArgs e)
         {
-            float scale = pointsDistance / (float)Math.Sqrt(Math.Pow(heightPx, 2) + Math.Pow(widthPx, 2));
+            double scale = pointsDistance / (double)Math.Sqrt(Math.Pow(overlayPath.Height, 2) + Math.Pow(overlayPath.Width, 2));
 
-            pointToPointVector = new SKPoint(widthPx * scale, -heightPx * scale);
-            firstPoint = new SKPoint(-pointToPointVector.X * numberOfHiddenPoints, (-pointToPointVector.Y * numberOfHiddenPoints) + heightPx);
-            firstPointOffsetVector = new SKPoint(0, 0);
-            upVector = new SKPoint(0, 0);
-            downVector = new SKPoint(0, 0);
+            pointToPointVector = new Point(overlayPath.Width * scale, -overlayPath.Height * scale);
+            firstPoint = new Point(-pointToPointVector.X * numberOfHiddenPoints, (-pointToPointVector.Y * numberOfHiddenPoints) + overlayPath.Height);
+            firstPointOffsetVector = new Point(0, 0);
+            upVector = new Point(0, 0);
+            downVector = new Point(0, 0);
         }
 
-        private void CanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs e)
+        private List<Point> GetPoints()
         {
-            var canvas = e.Surface.Canvas;
-            var info = e.Info;
-
-            canvas.Clear();
-
-            upVector = new SKPoint(pointToPointVector.Y * waveVectorScale, -pointToPointVector.X * waveVectorScale);
-            downVector = new SKPoint(-pointToPointVector.Y * waveVectorScale, pointToPointVector.X * waveVectorScale);
-
-            canvas.DrawPath(GetPath(), paint);
-        }
-
-        private List<SKPoint> GetPoints()
-        {
-            List<SKPoint> points = new List<SKPoint>();
+            List<Point> points = new List<Point>();
 
             bool up = true;
             bool onLine = true;
 
             for (int i = 0; i < numberOfPoints; i++)
             {
-                SKPoint point = new SKPoint(firstPoint.X + (pointToPointVector.X * i) + firstPointOffsetVector.X, firstPoint.Y + (pointToPointVector.Y * i) + firstPointOffsetVector.Y);
+                Point point = new Point(firstPoint.X + (pointToPointVector.X * i) + firstPointOffsetVector.X, firstPoint.Y + (pointToPointVector.Y * i) + firstPointOffsetVector.Y);
 
                 if (onLine)
                 {
@@ -109,32 +83,39 @@ namespace CallingApp
                 {
                     if (up)
                     {
-                        points.Add(point + upVector);
+                        points.Add(new Point(point.X + upVector.X, point.Y + upVector.Y));
                         up = false;
                         onLine = true;
                     }
                     else
                     {
-                        points.Add(point + downVector);
+                        points.Add(new Point(point.X + downVector.X, point.Y + downVector.Y));
                         up = true;
                         onLine = true;
                     }
 
                     if (i == numberOfPoints - 1)
-                        points.Add(new SKPoint(firstPoint.X + (pointToPointVector.X * (i + 1)) + firstPointOffsetVector.X, firstPoint.Y + (pointToPointVector.Y * (i + 1)) + firstPointOffsetVector.Y));
+                        points.Add(new Point(firstPoint.X + (pointToPointVector.X * (i + 1)) + firstPointOffsetVector.X, firstPoint.Y + (pointToPointVector.Y * (i + 1)) + firstPointOffsetVector.Y));
                 }
             }
 
             return points;
         }
 
-        private SKPath GetPath()
+        private PathGeometry GetPath()
         {
-            List<SKPoint> points = GetPoints();
-            SKPath path = new SKPath();
+            List<Point> points = GetPoints();
 
-            path.MoveTo(firstPoint);
-            path.LineTo(points[0]);
+            PathFigure pathFigure = new PathFigure
+            {
+                IsClosed = true,
+                IsFilled = true,
+                StartPoint = firstPoint,
+                Segments = new PathSegmentCollection
+                {
+                    new LineSegment(points[0])
+                }
+            };
 
             for (int i = 0; i < points.Count; i++)
             {
@@ -144,19 +125,21 @@ namespace CallingApp
                 if (i % 2 == 0)
                     continue;
 
-                SKPoint fPoint = points[i];
-                SKPoint sPoint = points[i + 1];
+                Point fPoint = points[i];
+                Point sPoint = points[i + 1];
 
-                path.QuadTo(fPoint, sPoint);
+                pathFigure.Segments.Add(new QuadraticBezierSegment(fPoint, sPoint));
             }
 
-            SKPoint lastPoint = new SKPoint(widthPx + (pointToPointVector.X * numberOfHiddenPoints), pointToPointVector.X * numberOfHiddenPoints);
+            Point lastPoint = new Point(overlayPath.Width + (pointToPointVector.X * numberOfHiddenPoints), pointToPointVector.X * numberOfHiddenPoints);
 
-            path.LineTo(lastPoint);
-            path.LineTo(lastPoint.X, firstPoint.Y);
-            path.Close();
-
-            return path;
+            pathFigure.Segments.Add(new LineSegment(lastPoint));
+            pathFigure.Segments.Add(new LineSegment(new Point(lastPoint.X, firstPoint.Y)));
+            
+            return new PathGeometry
+            {
+                Figures = new PathFigureCollection { pathFigure }
+            };
         }
 
         #endregion
@@ -165,57 +148,59 @@ namespace CallingApp
 
         private void StartMovingWaveAnimation()
         {
-            canvasView.AbortAnimation("MovingWaveAnimation");
+            overlayPath.AbortAnimation("MovingWaveAnimation");
             isWaveAnimating = true;
 
             Animation animation = new Animation();
 
             animation.Add(0, 1, new Animation(v =>
             {
-                firstPointOffsetVector = new SKPoint(pointToPointVector.X * (float)v, pointToPointVector.Y * (float)v);
-                canvasView.InvalidateSurface();
+                firstPointOffsetVector = new Point(pointToPointVector.X * v, pointToPointVector.Y * v);
+                upVector = new Point(pointToPointVector.Y * waveVectorScale, -pointToPointVector.X * waveVectorScale);
+                downVector = new Point(-pointToPointVector.Y * waveVectorScale, pointToPointVector.X * waveVectorScale);
+
+                overlayPath.Data = GetPath();
             }, 0, numberOfHiddenPoints));
 
-            animation.Commit(canvasView, "MovingWaveAnimation", length: 400, repeat: () => isWaveAnimating);
+            animation.Commit(overlayPath, "MovingWaveAnimation", length: 400, repeat: () => isWaveAnimating);
         }
 
         private void StartWaveAnimation()
         {
-            canvasView.AbortAnimation("WaveAnimation");
+            overlayPath.AbortAnimation("WaveAnimation");
 
             Animation animation = new Animation();
 
             animation.Add(0.1, 0.3, new Animation(v =>
             {
-                waveVectorScale = (float)v;
+                waveVectorScale = v;
             }, 0, maxWaveVectorScale));
 
             animation.Add(0.7, 0.9, new Animation(v =>
             {
-                waveVectorScale = (float)v;
+                waveVectorScale = v;
             }, maxWaveVectorScale, 0));
 
-            animation.Commit(canvasView, "WaveAnimation", length: 1200, repeat: () => isWaveAnimating);
+            animation.Commit(overlayPath, "WaveAnimation", length: 1200, repeat: () => isWaveAnimating);
         }
 
         private async Task StopWaveAnimation()
         {
-            canvasView.AbortAnimation("WaveAnimation");
+            overlayPath.AbortAnimation("WaveAnimation");
 
             Animation animation = new Animation(v =>
             {
-                waveVectorScale = (float)v;
+                waveVectorScale = v;
             }, waveVectorScale, 0);
 
-            animation.Commit(canvasView, "StopWaveAnimation", length: 240);
+            animation.Commit(overlayPath, "StopWaveAnimation", length: 240);
             await Task.Delay(250);
 
-            canvasView.AbortAnimation("MovingWaveAnimation");
+            overlayPath.AbortAnimation("MovingWaveAnimation");
 
             isWaveAnimating = false;
 
             overlayPath.IsVisible = true;
-            canvasView.IsVisible = false;
         }
 
         #endregion
@@ -488,8 +473,7 @@ namespace CallingApp
             _ = avatarView.OnCalled();
             await AnimateTriangle(true);
 
-            canvasView.IsVisible = true;
-            overlayPath.IsVisible = false;
+            overlayPath.IsVisible = true;
 
             StartMovingWaveAnimation();
             StartWaveAnimation();
