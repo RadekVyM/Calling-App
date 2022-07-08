@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="CallingApp.Maui.Views.Pages.MainPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CallingApp.Maui.Views.Pages"
+             xmlns:core="clr-namespace:CallingApp.Core;assembly=CallingApp.Core"
+             xmlns:controls="clr-namespace:CallingApp.Maui.Views.Controls"
+             BackgroundColor="{StaticResource BackgroundColor}">
+
+    <Grid BackgroundColor="{StaticResource BackgroundColor}">
+        <Grid x:Name="contentGrid" RowSpacing="0" RowDefinitions="150,20,50,*"
+              Margin="25,0">
+            <Grid.Resources>
+                <Style TargetType="{x:Type controls:HidableContentView}">
+                    <Setter Property="BackgroundColor" Value="Transparent"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="IsClippedToBounds" Value="True"/>
+                </Style>
+            </Grid.Resources>
+
+            <ContentView x:Name="whiteBoxView" Grid.Row="3" BackgroundColor="White" Margin="-25,0"/>
+
+            <controls:HidableContentView VerticalOptions="End">
+                <StackLayout Orientation="Horizontal" Spacing="0">
+                    <StackLayout.Resources>
+                        <Style TargetType="{x:Type Label}">
+                            <Setter Property="TextColor" Value="{StaticResource OverlayColor}"/>
+                            <Setter Property="VerticalOptions" Value="End"/>
+                            <Setter Property="FontFamily" Value="PriceFont"/>
+                        </Style>
+                    </StackLayout.Resources>
+
+                    <Label Text="$30" FontSize="80" />
+                    <Label Text=".00" FontSize="40" Margin="0,0,0,8"/>
+                </StackLayout>
+            </controls:HidableContentView>
+
+            <controls:HidableContentView Grid.Row="1">
+                <Label Text="Balance" TextColor="{StaticResource OverlayColor}" FontSize="16"/>
+            </controls:HidableContentView>
+
+            <ScrollView Grid.Row="3" VerticalScrollBarVisibility="Never">
+                <StackLayout Spacing="0">
+                    <StackLayout.Resources>
+                        <Style TargetType="{x:Type Label}">
+                            <Setter Property="TextColor" Value="{StaticResource OverlayColor}"/>
+                        </Style>
+                    </StackLayout.Resources>
+
+                    <controls:HidableContentView Margin="0,60,0,24">
+                        <Label Text="CLOSE FRIENDS" FontSize="19" FontAttributes="Bold"/>
+                    </controls:HidableContentView>
+
+                    <StackLayout BindableLayout.ItemsSource="{Binding People}" Spacing="20">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <controls:HidableContentView>
+                                    <Grid ColumnDefinitions="50,*,40,40" ColumnSpacing="15" VerticalOptions="Center" HeightRequest="50">
+                                        <Grid.Resources>
+                                            <Style TargetType="{x:Type ContentView}">
+                                                <Setter Property="VerticalOptions" Value="Fill"/>
+                                                <Setter Property="HorizontalOptions" Value="Fill"/>
+                                                <Setter Property="HeightRequest" Value="14"/>
+                                                <Setter Property="WidthRequest" Value="14"/>
+                                                <Setter Property="InputTransparent" Value="True"/>
+                                            </Style>
+                                            <Style TargetType="{x:Type Path}">
+                                                <Setter Property="Aspect" Value="Uniform"/>
+                                                <Setter Property="VerticalOptions" Value="Center"/>
+                                                <Setter Property="HorizontalOptions" Value="Center"/>
+                                                <Setter Property="Fill" Value="{StaticResource OverlayBrush}"/>
+                                            </Style>
+                                            <Style TargetType="{x:Type Button}">
+                                                <Setter Property="HeightRequest" Value="40"/>
+                                                <Setter Property="WidthRequest" Value="40"/>
+                                                <Setter Property="CornerRadius" Value="20"/>
+                                                <Setter Property="VerticalOptions" Value="Center"/>
+                                                <Setter Property="Background" Value="{StaticResource PersonButtonBrush}"/>
+                                            </Style>
+                                        </Grid.Resources>
+                                        
+                                        <Image Source="{Binding Image}" Aspect="AspectFill"
+                                               BackgroundColor="White">
+                                            <Image.Clip>
+                                                <EllipseGeometry Center="25,25" RadiusX="24" RadiusY="24"/>
+                                            </Image.Clip>
+                                        </Image>
+                                        <Ellipse Stroke="{StaticResource OverlayBrush}" StrokeThickness="2"/>
+
+                                        <Label Grid.Column="1" 
+                                               Text="{Binding Name}" FontSize="16" 
+                                               VerticalOptions="Center"/>
+
+                                        <Button Grid.Column="2"
+                                                Command="{Binding CallPersonCommand, Source={RelativeSource AncestorType={x:Type core:MainPageViewModel}}}"
+                                                CommandParameter="{Binding .}"
+                                                Clicked="CallButtonClicked"/>
+                                        <Button Grid.Column="3"/>
+                                        <ContentView Grid.Column="2">
+                                            <Path Data="{StaticResource PhoneGeometry}"/>
+                                        </ContentView>
+                                        <ContentView Grid.Column="3">
+                                            <Path Data="{StaticResource ThreeDotsGeometry}"/>
+                                        </ContentView>
+                                    </Grid>
+                                </controls:HidableContentView>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+
+                    <controls:HidableContentView Margin="0,45,0,0">
+                        <Label Text="HISTORY" FontSize="19" FontAttributes="Bold"/>
+                    </controls:HidableContentView>
+
+                    <controls:HidableContentView Margin="0,12,0,24">
+                        <Label Text="Today" FontSize="16" Opacity="0.6"/>
+                    </controls:HidableContentView>
+
+                    <controls:HidableContentView>
+                        <Grid ColumnDefinitions="50,*,*" ColumnSpacing="15" VerticalOptions="Center" HeightRequest="50">
+                            <Image Source="{Binding Images[0]}" Aspect="AspectFill"
+                                   BackgroundColor="White">
+                                <Image.Clip>
+                                    <EllipseGeometry Center="25,25" RadiusX="24" RadiusY="24"/>
+                                </Image.Clip>
+                            </Image>
+                            <Ellipse Stroke="{StaticResource OverlayBrush}" StrokeThickness="2"/>
+
+                            <Label Grid.Column="1" 
+                                   Text="Mailchimp" FontSize="16" 
+                                   VerticalOptions="Center"/>
+                            <Label Grid.Column="2" 
+                                   Text="$99.00" FontSize="16" FontAttributes="Bold"
+                                   VerticalOptions="Center" HorizontalOptions="End"/>
+                        </Grid>
+                    </controls:HidableContentView>
+
+                    <controls:HidableContentView Margin="0,20,0,0">
+                        <Grid ColumnDefinitions="50,*,*" ColumnSpacing="15" VerticalOptions="Center" HeightRequest="50">
+                            <Image Source="{Binding Images[1]}" Aspect="AspectFill"
+                                   BackgroundColor="White">
+                                <Image.Clip>
+                                    <EllipseGeometry Center="25,25" RadiusX="24" RadiusY="24"/>
+                                </Image.Clip>
+                            </Image>
+                            <Ellipse Stroke="{StaticResource OverlayBrush}" StrokeThickness="2"/>
+
+                            <Label Grid.Column="1" 
+                                   Text="Acne Studios" FontSize="16" 
+                                   VerticalOptions="Center"/>
+                            <Label Grid.Column="2" 
+                                   Text="$234.00" FontSize="16" FontAttributes="Bold"
+                                   VerticalOptions="Center" HorizontalOptions="End"/>
+                        </Grid>
+                    </controls:HidableContentView>
+
+                    <controls:HidableContentView Margin="0,20,0,24">
+                        <Label Text="Yesterday" FontSize="16" Opacity="0.6"/>
+                    </controls:HidableContentView>
+
+                    <controls:HidableContentView Margin="0,0,0,40">
+                        <Grid ColumnDefinitions="50,*,*" ColumnSpacing="15" VerticalOptions="Center" HeightRequest="50">
+                            <Image Source="{Binding Images[2]}" Aspect="AspectFill"
+                                   BackgroundColor="White">
+                                <Image.Clip>
+                                    <EllipseGeometry Center="25,25" RadiusX="24" RadiusY="24"/>
+                                </Image.Clip>
+                            </Image>
+                            <Ellipse Stroke="{StaticResource OverlayBrush}" StrokeThickness="2"/>
+
+                            <Label Grid.Column="1" 
+                                   Text="Whole Foods" FontSize="16" 
+                                   VerticalOptions="Center"/>
+                            <Label Grid.Column="2" 
+                                   Text="$2.47" FontSize="16" FontAttributes="Bold"
+                                   VerticalOptions="Center" HorizontalOptions="End"/>
+                        </Grid>
+                    </controls:HidableContentView>
+                </StackLayout>
+            </ScrollView>
+
+            <ContentView x:Name="whiteGradientBoxView" Grid.Row="3" VerticalOptions="Start" HeightRequest="50">
+                <ContentView.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="White"
+                                      Offset="0"/>
+                        <GradientStop Color="White"
+                                      Offset="0.2"/>
+                        <GradientStop Color="#00ffffff"
+                                      Offset="1"/>
+                    </LinearGradientBrush>
+                </ContentView.Background>
+            </ContentView>
+
+            <controls:HidableContentView Grid.Row="2" VerticalOptions="End" TranslationY="23">
+                <Grid ColumnDefinitions="46,46" ColumnSpacing="25">
+                    <Grid.Resources>
+                        <Style TargetType="{x:Type Path}">
+                            <Setter Property="Aspect" Value="Uniform"/>
+                            <Setter Property="InputTransparent" Value="True"/>
+                        </Style>
+                        <Style TargetType="{x:Type ContentView}">
+                            <Setter Property="VerticalOptions" Value="Center"/>
+                            <Setter Property="HorizontalOptions" Value="Center"/>
+                            <Setter Property="HeightRequest" Value="20"/>
+                            <Setter Property="WidthRequest" Value="20"/>
+                        </Style>
+                    </Grid.Resources>
+
+                    <Ellipse Fill="{StaticResource AddButtonBrush}"
+                             HeightRequest="46" WidthRequest="46"/>
+                    <Ellipse Grid.Column="1" 
+                             Fill="{StaticResource OverlayBrush}"
+                             HeightRequest="46" WidthRequest="46"/>
+                    <ContentView>
+                        <Path Fill="{StaticResource OverlayBrush}" Data="{StaticResource PlusGeometry}"/>
+                    </ContentView>
+                    <ContentView Grid.Column="1">
+                        <Path Fill="{StaticResource BackgroundBrush}" Data="{StaticResource CardGeometry}"/>
+                    </ContentView>
+                </Grid>
+            </controls:HidableContentView>
+        </Grid>
+
+        <controls:CallView x:Name="callView" InputTransparent="True"/>
+    </Grid>
+
+</ContentPage>

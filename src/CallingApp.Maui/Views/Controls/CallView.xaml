@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView x:Class="CallingApp.Maui.Views.Controls.CallView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CallingApp.Maui.Views.Controls"
+             x:Name="thisView">
+
+    <Grid RowDefinitions="*,90,100" RowSpacing="0">
+        <ContentView Grid.RowSpan="3" SizeChanged="CanvasViewSizeChanged"
+                     HorizontalOptions="Fill" VerticalOptions="Fill">
+            <Path x:Name="overlayPath" Fill="{StaticResource OverlayBrush}"/>
+        </ContentView>
+
+        <Grid x:Name="buttonsGrid" Grid.Row="1" ColumnDefinitions="*,*,*" ColumnSpacing="0" 
+              Margin="30,0"
+              IsVisible="false">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Path}">
+                    <Setter Property="Aspect" Value="Uniform"/>
+                    <Setter Property="HorizontalOptions" Value="Fill"/>
+                    <Setter Property="VerticalOptions" Value="Fill"/>
+                    <Setter Property="Fill" Value="{StaticResource BackgroundBrush}"/>
+                </Style>
+                <Style TargetType="{x:Type ContentView}">
+                    <Setter Property="HorizontalOptions" Value="Center"/>
+                    <Setter Property="VerticalOptions" Value="Start"/>
+                    <Setter Property="HeightRequest" Value="30"/>
+                    <Setter Property="WidthRequest" Value="30"/>
+                </Style>
+            </Grid.Resources>
+
+            <ContentView>
+                <Path Data="{StaticResource DialerGeometry}"/>
+            </ContentView>
+            <ContentView Grid.Column="1">
+                <Path Data="{StaticResource SpeakerGeometry}"/>
+            </ContentView>
+            <ContentView Grid.Column="2">
+                <Path Data="{StaticResource PersonGeometry}"/>
+            </ContentView>
+        </Grid>
+
+        <Grid x:Name="timeGrid" ColumnDefinitions="*,19,*" ColumnSpacing="0"
+              Margin="0,120,0,0"
+              HorizontalOptions="Center" VerticalOptions="Start" 
+              IsVisible="false">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Label}">
+                    <Setter Property="FontFamily" Value="TimeFont"/>
+                    <Setter Property="FontSize" Value="85"/>
+                    <Setter Property="TextColor" Value="{StaticResource OverlayColor}"/>
+                    <Setter Property="CharacterSpacing" Value="-0.5"/>
+                    <Setter Property="VerticalOptions" Value="Start"/>
+                </Style>
+            </Grid.Resources>
+
+            <Label x:Name="minutesLabel" HorizontalOptions="End"/>
+            <Label Grid.Column="1" Text=":" Margin="0,9,0,0"/>
+            <Label x:Name="secondsLabel" Grid.Column="2" HorizontalOptions="Start"/>
+        </Grid>
+
+        <local:AvatarView x:Name="avatarView" Grid.RowSpan="3" IsVisible="false" BindingContext="{Binding Source={x:Reference thisView}, Path=BindingContext}"/>
+
+        <local:HangUpView x:Name="hangUpView" Grid.Row="2"
+                          HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,20" 
+                          WidthRequest="80" HeightRequest="80"
+                          Swiped="HangUpViewSwiped" BindingContext="{Binding Source={x:Reference thisView}, Path=BindingContext}"/>
+    </Grid>
+</ContentView>
