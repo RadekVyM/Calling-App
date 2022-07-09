@@ -6,12 +6,6 @@
              InputTransparent="True">
 
     <Grid>
-        <Grid.Resources>
-            <Style TargetType="{x:Type Label}">
-                <Setter Property="FontSize" Value="17"/>
-            </Style>
-        </Grid.Resources>
-
         <AbsoluteLayout>
             <Grid x:Name="imageGrid" SizeChanged="ViewSizeChanged"
                   VerticalOptions="Start" HorizontalOptions="Start"
@@ -26,11 +20,13 @@
                 <Ellipse Stroke="{StaticResource OverlayBrush}" StrokeThickness="4"/>
             </Grid>
         </AbsoluteLayout>
-        
+
+        <!-- I had to use GraphicsView for the top label because of some layout and sizing related bugs -->
         <GraphicsView x:Name="topLabelGraphicsView" HorizontalOptions="Fill" VerticalOptions="Fill" InputTransparent="True"/>
 
         <Label x:Name="centerLabel" 
                TextColor="{StaticResource BackgroundColor}"
+               FontSize="17"
                HorizontalOptions="Fill" VerticalOptions="Center"
                HorizontalTextAlignment="Center"
                TranslationY="65"

@@ -185,7 +185,7 @@ namespace CallingApp.Maui.Views.Controls
                 canvas.ClipRectangle(new RectF(TextPosition.X, 0, textRect.Width, textRect.Height * 2));
                 canvas.DrawString(Text, textRect, HorizontalAlignment.Left, VerticalAlignment.Center);
 
-                canvas.ResetState();
+                canvas.ResetState(); // See: https://github.com/dotnet/Microsoft.Maui.Graphics/issues/405
             }
         }
     }
