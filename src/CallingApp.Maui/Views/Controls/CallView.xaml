@@ -6,19 +6,24 @@
              x:Name="thisView">
 
     <Grid RowDefinitions="*,90,100" RowSpacing="0">
-        <ContentView Grid.RowSpan="3" SizeChanged="CanvasViewSizeChanged"
-                     HorizontalOptions="Fill" VerticalOptions="Fill">
-            <Path x:Name="overlayPath" Fill="{StaticResource OverlayBrush}"/>
-        </ContentView>
+        <GraphicsView x:Name="overlayGraphicsView"
+                      Grid.RowSpan="3" 
+                      InputTransparent="True"
+                      HorizontalOptions="Fill" VerticalOptions="Fill"
+                      SizeChanged="OverlayGraphicsViewSizeChanged"/>
 
-        <Grid x:Name="buttonsGrid" Grid.Row="1" ColumnDefinitions="*,*,*" ColumnSpacing="0" 
-              Margin="30,0"
-              IsVisible="false">
-            <Grid.Resources>
+        <HorizontalStackLayout x:Name="buttonsStack" Grid.Row="1" 
+                               HorizontalOptions="Center"
+                               Margin="30,0" Spacing="60"
+                               SizeChanged="ButtonsStackSizeChanged">
+            <HorizontalStackLayout.Resources>
                 <Style TargetType="{x:Type Path}">
+                    <Setter Property="InputTransparent" Value="True"/>
                     <Setter Property="Aspect" Value="Uniform"/>
-                    <Setter Property="HorizontalOptions" Value="Fill"/>
-                    <Setter Property="VerticalOptions" Value="Fill"/>
+                    <Setter Property="HorizontalOptions" Value="Center"/>
+                    <Setter Property="VerticalOptions" Value="Start"/>
+                    <Setter Property="HeightRequest" Value="30"/>
+                    <Setter Property="WidthRequest" Value="30"/>
                     <Setter Property="Fill" Value="{StaticResource BackgroundBrush}"/>
                 </Style>
                 <Style TargetType="{x:Type ContentView}">
@@ -27,23 +32,43 @@
                     <Setter Property="HeightRequest" Value="30"/>
                     <Setter Property="WidthRequest" Value="30"/>
                 </Style>
-            </Grid.Resources>
+                <Style TargetType="{x:Type Grid}">
+                    <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+                    <Setter Property="VerticalOptions" Value="Start"/>
+                </Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="HorizontalOptions" Value="Center"/>
+                    <Setter Property="VerticalOptions" Value="Start"/>
+                    <Setter Property="HeightRequest" Value="30"/>
+                    <Setter Property="WidthRequest" Value="30"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                </Style>
+            </HorizontalStackLayout.Resources>
 
-            <ContentView>
-                <Path Data="{StaticResource DialerGeometry}"/>
-            </ContentView>
-            <ContentView Grid.Column="1">
-                <Path Data="{StaticResource SpeakerGeometry}"/>
-            </ContentView>
-            <ContentView Grid.Column="2">
-                <Path Data="{StaticResource PersonGeometry}"/>
-            </ContentView>
-        </Grid>
+            <Grid>
+                <Button/>
+                <ContentView>
+                    <Path Data="{StaticResource DialerGeometry}"/>
+                </ContentView>
+            </Grid>
+            <Grid>
+                <Button/>
+                <ContentView>
+                    <Path Data="{StaticResource SpeakerGeometry}"/>
+                </ContentView>
+            </Grid>
+            <Grid>
+                <Button/>
+                <ContentView>
+                    <Path Data="{StaticResource PersonGeometry}"/>
+                </ContentView>
+            </Grid>
+        </HorizontalStackLayout>
 
-        <Grid x:Name="timeGrid" ColumnDefinitions="*,19,*" ColumnSpacing="0"
+        <Grid x:Name="timeGrid" ColumnDefinitions="100,19,100" ColumnSpacing="0"
               Margin="0,120,0,0"
               HorizontalOptions="Center" VerticalOptions="Start" 
-              IsVisible="false">
+              SizeChanged="TimeGridSizeChanged">
             <Grid.Resources>
                 <Style TargetType="{x:Type Label}">
                     <Setter Property="FontFamily" Value="TimeFont"/>
@@ -54,16 +79,16 @@
                 </Style>
             </Grid.Resources>
 
-            <Label x:Name="minutesLabel" HorizontalOptions="End"/>
+            <Label x:Name="minutesLabel" HorizontalOptions="Fill" HorizontalTextAlignment="End" Text="00"/>
             <Label Grid.Column="1" Text=":" Margin="0,9,0,0"/>
-            <Label x:Name="secondsLabel" Grid.Column="2" HorizontalOptions="Start"/>
+            <Label x:Name="secondsLabel" Grid.Column="2" HorizontalOptions="Fill" HorizontalTextAlignment="Start" Text="00"/>
         </Grid>
 
-        <local:AvatarView x:Name="avatarView" Grid.RowSpan="3" IsVisible="false" BindingContext="{Binding Source={x:Reference thisView}, Path=BindingContext}"/>
+        <local:AvatarView x:Name="avatarView" Grid.RowSpan="3" BindingContext="{Binding Source={x:Reference thisView}, Path=BindingContext.CurrentPerson}"/>
 
         <local:HangUpView x:Name="hangUpView" Grid.Row="2"
                           HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,20" 
                           WidthRequest="80" HeightRequest="80"
-                          Swiped="HangUpViewSwiped" BindingContext="{Binding Source={x:Reference thisView}, Path=BindingContext}"/>
+                          Interacted="HangUpViewInteracted" BindingContext="{Binding Source={x:Reference thisView}, Path=BindingContext}"/>
     </Grid>
 </ContentView>

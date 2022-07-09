@@ -14,6 +14,7 @@
 
         <Grid.GestureRecognizers>
             <PanGestureRecognizer PanUpdated="PanUpdated"/>
+            <TapGestureRecognizer Tapped="Tapped"/>
         </Grid.GestureRecognizers>
     </Grid>
 </ContentView>

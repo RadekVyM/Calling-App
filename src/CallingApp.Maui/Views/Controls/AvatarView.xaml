@@ -2,13 +2,13 @@
 <ContentView x:Class="CallingApp.Maui.Views.Controls.AvatarView"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:CallingApp.Maui.Views.Controls">
+             xmlns:local="clr-namespace:CallingApp.Maui.Views.Controls"
+             InputTransparent="True">
 
     <Grid>
         <Grid.Resources>
             <Style TargetType="{x:Type Label}">
                 <Setter Property="FontSize" Value="17"/>
-                <Setter Property="Text" Value="{Binding CurrentPerson.Name}"/>
             </Style>
         </Grid.Resources>
 
@@ -16,7 +16,7 @@
             <Grid x:Name="imageGrid" SizeChanged="ViewSizeChanged"
                   VerticalOptions="Start" HorizontalOptions="Start"
                   HeightRequest="80" WidthRequest="80">
-                <Image x:Name="image" Source="{Binding CurrentPerson.Image}" Aspect="AspectFill"
+                <Image x:Name="image" Source="{Binding Image}" Aspect="AspectFill"
                        HorizontalOptions="Center" VerticalOptions="Center"
                        HeightRequest="80" WidthRequest="80">
                     <Image.Clip>
@@ -25,19 +25,15 @@
                 </Image>
                 <Ellipse Stroke="{StaticResource OverlayBrush}" StrokeThickness="4"/>
             </Grid>
-            <Border x:Name="topLabelFrame" Padding="0"
-                    BackgroundColor="Transparent"
-                    HorizontalOptions="Start" VerticalOptions="Start">
-                <Label x:Name="topLabel" 
-                       TextColor="{StaticResource OverlayColor}"
-                       HorizontalOptions="Start" VerticalOptions="Start"
-                       SizeChanged="ViewSizeChanged"/>
-            </Border>
         </AbsoluteLayout>
+        
+        <GraphicsView x:Name="topLabelGraphicsView" HorizontalOptions="Fill" VerticalOptions="Fill" InputTransparent="True"/>
 
         <Label x:Name="centerLabel" 
                TextColor="{StaticResource BackgroundColor}"
-               HorizontalOptions="Center" VerticalOptions="Center"
-               TranslationY="65"/>
+               HorizontalOptions="Fill" VerticalOptions="Center"
+               HorizontalTextAlignment="Center"
+               TranslationY="65"
+               Text="{Binding Name}"/>
     </Grid>
 </ContentView>

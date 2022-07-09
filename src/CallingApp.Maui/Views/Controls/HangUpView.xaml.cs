@@ -19,7 +19,7 @@ namespace CallingApp.Maui.Views.Controls
 
         #region Public members
 
-        public event Action<object, EventArgs> Swiped;
+        public event Action<object, EventArgs> Interacted;
 
         #endregion
 
@@ -64,133 +64,24 @@ namespace CallingApp.Maui.Views.Controls
             if (initSizeChange)
             {
                 IsVisible = false;
-                initSizeChange = true;
+                initSizeChange = false;
             }    
-        }
-
-        class HangupDrawable : IDrawable
-        {
-            readonly float arcRadius;
-            readonly float arcThickness;
-            readonly float triangleWidth;
-            readonly float triangleHeight;
-            readonly PointF defaultArcPosition;
-            readonly PointF defaultTopTrianglePosition;
-            readonly PointF defaultBottomTrianglePosition;
-            readonly Color primaryColor;
-            
-            PathF defaultArcPath;
-            PathF defaultTopTrianglePath;
-            PathF defaultBottomTrianglePath;
-
-            public float ArcOpacity { get; set; } = 1;
-            public float TopTriangleOpacity { get; set; } = 1;
-            public float BottomTriangleOpacity { get; set; } = 1;
-            public float ArcRotation { get; set; } = 0;
-            public float ArcTranslationY { get; set; } = 0;
-            public float TopTriangleTranslationY { get; set; } = 0;
-            public float BottomTriangleTranslationY { get; set; } = 0;
-            public float TopTriangleScale { get; set; } = 1;
-            public float BottomTriangleScale { get; set; } = 1;
-
-
-            public HangupDrawable(float arcRadius, float arcThickness, float triangleWidth, float triangleHeight, PointF defaultArcPosition, PointF defaultTopTrianglePosition, PointF defaultBottomTrianglePosition, Color primaryColor)
-            {
-                this.arcRadius = arcRadius;
-                this.arcThickness = arcThickness;
-                this.triangleWidth = triangleWidth;
-                this.triangleHeight = triangleHeight;
-                this.primaryColor = primaryColor;
-                this.defaultArcPosition = defaultArcPosition;
-                this.defaultTopTrianglePosition = defaultTopTrianglePosition;
-                this.defaultBottomTrianglePosition = defaultBottomTrianglePosition;
-
-                defaultArcPath = CreateDefaultArcPath();
-                defaultTopTrianglePath = CreateDefaultTopTrianglePath();
-                defaultBottomTrianglePath = CreateDefaultBottomTrianglePath();
-            }
-
-
-            public void Draw(ICanvas canvas, RectF dirtyRect)
-            {
-                var arcPath = new PathF(defaultArcPath);
-                arcPath.Move(0, ArcTranslationY);
-                arcPath = arcPath.Rotate(ArcRotation, new Point(defaultArcPosition.X + (defaultArcPath.Bounds.Width / 2), defaultTopTrianglePosition.Y + ArcTranslationY));
-                
-                var topTrianglePath = defaultTopTrianglePath.AsScaledPath(TopTriangleScale);
-                topTrianglePath.Move(
-                    defaultTopTrianglePosition.X - topTrianglePath.Bounds.X - (topTrianglePath.Bounds.Width / 2) + (defaultTopTrianglePath.Bounds.Width / 2),
-                    defaultTopTrianglePosition.Y - topTrianglePath.Bounds.Y + TopTriangleTranslationY);
-
-                var bottomTrianglePath = defaultBottomTrianglePath.AsScaledPath(BottomTriangleScale);
-                bottomTrianglePath.Move(
-                    defaultBottomTrianglePosition.X - bottomTrianglePath.Bounds.X - (bottomTrianglePath.Bounds.Width / 2) + (defaultBottomTrianglePath.Bounds.Width / 2),
-                    defaultBottomTrianglePosition.Y - bottomTrianglePath.Bounds.Y + BottomTriangleTranslationY);
-
-                canvas.SetFillPaint(new SolidColorBrush(Color.FromRgba(primaryColor.Red, primaryColor.Green, primaryColor.Blue, ArcOpacity)), dirtyRect);
-                canvas.FillPath(arcPath);
-
-                canvas.SetFillPaint(new SolidColorBrush(Color.FromRgba(primaryColor.Red, primaryColor.Green, primaryColor.Blue, TopTriangleOpacity)), dirtyRect);
-                canvas.FillPath(topTrianglePath);
-                
-                canvas.SetFillPaint(new SolidColorBrush(Color.FromRgba(primaryColor.Red, primaryColor.Green, primaryColor.Blue, BottomTriangleOpacity)), dirtyRect);
-                canvas.FillPath(bottomTrianglePath);
-            }
-
-            private PathF CreateDefaultArcPath()
-            {
-                var path = new PathF();
-                path.MoveTo(new Point(0, arcRadius));
-                path.QuadTo(new Point(0, 0), new Point(arcRadius, 0));
-                path.QuadTo(new Point(2 * arcRadius, 0), new Point(2 * arcRadius, arcRadius));
-                path.LineTo(new Point((2 * arcRadius) - arcThickness, arcRadius));
-                path.QuadTo(new Point((2 * arcRadius) - arcThickness, arcThickness), new Point(arcRadius, arcThickness));
-                path.QuadTo(new Point(arcThickness, arcThickness), new Point(arcThickness, arcRadius));
-                path.Close();
-                path.Move(defaultArcPosition.X, defaultArcPosition.Y);
-                return path;
-            }
-
-            private PathF CreateDefaultTrianglePath()
-            {
-                var path = new PathF();
-
-                path.MoveTo(new Point(0, 0));
-                path.LineTo(new Point(triangleWidth, 0));
-                path.LineTo(new Point(arcRadius - arcThickness, triangleHeight));
-                path.Close();
-
-                return path;
-            }
-
-            private PathF CreateDefaultTopTrianglePath()
-            {
-                var path = CreateDefaultTrianglePath();
-                path.Move(defaultTopTrianglePosition.X, defaultTopTrianglePosition.Y);
-                return path;
-            }
-
-            private PathF CreateDefaultBottomTrianglePath()
-            {
-                var path = CreateDefaultTrianglePath();
-                path.Move(defaultBottomTrianglePosition.X, defaultBottomTrianglePosition.Y);
-                return path;
-            }
         }
 
         private async void PanUpdated(object sender, PanUpdatedEventArgs e)
         {
+#if IOS || ANDROID
             switch (e.StatusType)
             {
                 case GestureStatus.Completed:
                 case GestureStatus.Canceled:
                     if (lastTotalY > ellipse.Height / 3)
-                        Swiped?.Invoke(sender, e);
+                        Interacted?.Invoke(sender, e);
 
                     await Task.Delay(250);
 
                     Animation animation = new Animation();
-                    
+
                     animation.Add(0, 1, new Animation(v => drawable.ArcTranslationY = (float)v, drawable.ArcTranslationY, 0));
                     animation.Add(0, 1, new Animation(v => drawable.TopTriangleTranslationY = (float)v, drawable.TopTriangleTranslationY, 0));
                     animation.Add(0, 1, new Animation(v => drawable.BottomTriangleTranslationY = (float)v, drawable.BottomTriangleTranslationY, 0));
@@ -226,6 +117,14 @@ namespace CallingApp.Maui.Views.Controls
                     graphicsView.Invalidate();
                     break;
             }
+#endif
+        }
+
+        private void Tapped(object sender, EventArgs e)
+        {
+#if WINDOWS || MACCATALYST
+            Interacted?.Invoke(sender, e);
+#endif
         }
 
         #endregion
@@ -283,5 +182,114 @@ namespace CallingApp.Maui.Views.Controls
         }
 
         #endregion
+
+        class HangupDrawable : IDrawable
+        {
+            readonly float arcRadius;
+            readonly float arcThickness;
+            readonly float triangleWidth;
+            readonly float triangleHeight;
+            readonly PointF defaultArcPosition;
+            readonly PointF defaultTopTrianglePosition;
+            readonly PointF defaultBottomTrianglePosition;
+            readonly Color primaryColor;
+            readonly PathF defaultArcPath;
+            readonly PathF defaultTopTrianglePath;
+            readonly PathF defaultBottomTrianglePath;
+
+            public float ArcOpacity { get; set; } = 1;
+            public float TopTriangleOpacity { get; set; } = 1;
+            public float BottomTriangleOpacity { get; set; } = 1;
+            public float ArcRotation { get; set; } = 0;
+            public float ArcTranslationY { get; set; } = 0;
+            public float TopTriangleTranslationY { get; set; } = 0;
+            public float BottomTriangleTranslationY { get; set; } = 0;
+            public float TopTriangleScale { get; set; } = 1;
+            public float BottomTriangleScale { get; set; } = 1;
+
+
+            public HangupDrawable(float arcRadius, float arcThickness, float triangleWidth, float triangleHeight, PointF defaultArcPosition, PointF defaultTopTrianglePosition, PointF defaultBottomTrianglePosition, Color primaryColor)
+            {
+                this.arcRadius = arcRadius;
+                this.arcThickness = arcThickness;
+                this.triangleWidth = triangleWidth;
+                this.triangleHeight = triangleHeight;
+                this.primaryColor = primaryColor;
+                this.defaultArcPosition = defaultArcPosition;
+                this.defaultTopTrianglePosition = defaultTopTrianglePosition;
+                this.defaultBottomTrianglePosition = defaultBottomTrianglePosition;
+
+                defaultArcPath = CreateDefaultArcPath();
+                defaultTopTrianglePath = CreateDefaultTopTrianglePath();
+                defaultBottomTrianglePath = CreateDefaultBottomTrianglePath();
+            }
+
+
+            public void Draw(ICanvas canvas, RectF dirtyRect)
+            {
+                var arcPath = new PathF(defaultArcPath);
+                arcPath.Move(0, ArcTranslationY);
+                arcPath = arcPath.Rotate(ArcRotation, new Point(defaultArcPosition.X + (defaultArcPath.Bounds.Width / 2), defaultTopTrianglePosition.Y + ArcTranslationY));
+
+                var topTrianglePath = defaultTopTrianglePath.AsScaledPath(TopTriangleScale);
+                topTrianglePath.Move(
+                    defaultTopTrianglePosition.X - topTrianglePath.Bounds.X - (topTrianglePath.Bounds.Width / 2) + (defaultTopTrianglePath.Bounds.Width / 2),
+                    defaultTopTrianglePosition.Y - topTrianglePath.Bounds.Y + TopTriangleTranslationY);
+
+                var bottomTrianglePath = defaultBottomTrianglePath.AsScaledPath(BottomTriangleScale);
+                bottomTrianglePath.Move(
+                    defaultBottomTrianglePosition.X - bottomTrianglePath.Bounds.X - (bottomTrianglePath.Bounds.Width / 2) + (defaultBottomTrianglePath.Bounds.Width / 2),
+                    defaultBottomTrianglePosition.Y - bottomTrianglePath.Bounds.Y + BottomTriangleTranslationY);
+
+                canvas.SetFillPaint(new SolidColorBrush(Color.FromRgba(primaryColor.Red, primaryColor.Green, primaryColor.Blue, ArcOpacity)), dirtyRect);
+                canvas.FillPath(arcPath);
+
+                canvas.SetFillPaint(new SolidColorBrush(Color.FromRgba(primaryColor.Red, primaryColor.Green, primaryColor.Blue, TopTriangleOpacity)), dirtyRect);
+                canvas.FillPath(topTrianglePath);
+
+                canvas.SetFillPaint(new SolidColorBrush(Color.FromRgba(primaryColor.Red, primaryColor.Green, primaryColor.Blue, BottomTriangleOpacity)), dirtyRect);
+                canvas.FillPath(bottomTrianglePath);
+            }
+
+            private PathF CreateDefaultArcPath()
+            {
+                var path = new PathF();
+                path.MoveTo(new Point(0, arcRadius));
+                path.QuadTo(new Point(0, 0), new Point(arcRadius, 0));
+                path.QuadTo(new Point(2 * arcRadius, 0), new Point(2 * arcRadius, arcRadius));
+                path.LineTo(new Point((2 * arcRadius) - arcThickness, arcRadius));
+                path.QuadTo(new Point((2 * arcRadius) - arcThickness, arcThickness), new Point(arcRadius, arcThickness));
+                path.QuadTo(new Point(arcThickness, arcThickness), new Point(arcThickness, arcRadius));
+                path.Close();
+                path.Move(defaultArcPosition.X, defaultArcPosition.Y);
+                return path;
+            }
+
+            private PathF CreateDefaultTrianglePath()
+            {
+                var path = new PathF();
+
+                path.MoveTo(new Point(0, 0));
+                path.LineTo(new Point(triangleWidth, 0));
+                path.LineTo(new Point(arcRadius - arcThickness, triangleHeight));
+                path.Close();
+
+                return path;
+            }
+
+            private PathF CreateDefaultTopTrianglePath()
+            {
+                var path = CreateDefaultTrianglePath();
+                path.Move(defaultTopTrianglePosition.X, defaultTopTrianglePosition.Y);
+                return path;
+            }
+
+            private PathF CreateDefaultBottomTrianglePath()
+            {
+                var path = CreateDefaultTrianglePath();
+                path.Move(defaultBottomTrianglePosition.X, defaultBottomTrianglePosition.Y);
+                return path;
+            }
+        }
     }
 }
