@@ -3,11 +3,12 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:CallingApp.Maui.Views.Controls"
-             InputTransparent="True">
+             InputTransparent="True"
+             SizeChanged="ContentViewSizeChanged">
 
     <Grid>
         <AbsoluteLayout>
-            <Grid x:Name="imageGrid" SizeChanged="ViewSizeChanged"
+            <Grid x:Name="imageGrid" SizeChanged="ImageGridSizeChanged"
                   VerticalOptions="Start" HorizontalOptions="Start"
                   HeightRequest="80" WidthRequest="80">
                 <Image x:Name="image" Source="{Binding Image}" Aspect="AspectFill"

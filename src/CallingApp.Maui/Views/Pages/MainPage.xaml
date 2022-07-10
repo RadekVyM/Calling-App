@@ -2,14 +2,14 @@
 <ContentPage x:Class="CallingApp.Maui.Views.Pages.MainPage"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:CallingApp.Maui.Views.Pages"
+             xmlns:local="clr-namespace:CallingApp.Maui"
              xmlns:core="clr-namespace:CallingApp.Core;assembly=CallingApp.Core"
              xmlns:controls="clr-namespace:CallingApp.Maui.Views.Controls"
              BackgroundColor="{StaticResource BackgroundColor}">
 
     <Grid BackgroundColor="{StaticResource BackgroundColor}">
         <Grid x:Name="contentGrid" RowSpacing="0" RowDefinitions="150,20,50,*"
-              Margin="25,0">
+              Margin="25,0" Padding="{x:Static local:StatusBar.Padding}">
             <Grid.Resources>
                 <Style TargetType="{x:Type controls:HidableContentView}">
                     <Setter Property="BackgroundColor" Value="Transparent"/>

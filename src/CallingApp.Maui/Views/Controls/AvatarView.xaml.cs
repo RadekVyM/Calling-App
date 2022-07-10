@@ -4,7 +4,8 @@ namespace CallingApp.Maui.Views.Controls
 {
     public partial class AvatarView : ContentView
     {
-        bool initContentViewSizeChanged = true;
+        bool initImageGridSizeChanged = true;
+        bool isPhonePickedUp = false;
 
         Point imageCenterPosition => new Point((Width - imageGrid.WidthRequest) / 2, (Height - imageGrid.HeightRequest) / 2);
         Point imageTopPosition = new Point(0, 0);
@@ -51,15 +52,23 @@ namespace CallingApp.Maui.Views.Controls
             }
         }
 
-        private void ViewSizeChanged(object sender, EventArgs e)
+        private void ImageGridSizeChanged(object sender, EventArgs e)
         {
-
-            if (initContentViewSizeChanged && imageGrid.Height != 0)
+            if (initImageGridSizeChanged && imageGrid.Height != 0)
             {
-                UpdateSizes();
                 IsVisible = false;
-                initContentViewSizeChanged = false;
+                initImageGridSizeChanged = false;
             }
+            
+            UpdateSizes();
+        }
+
+        private void ContentViewSizeChanged(object sender, EventArgs e)
+        {
+            UpdateSizes();
+
+            if (isPhonePickedUp)
+                imageGrid.TranslationY = imageTopPosition.Y - imageGrid.Y;
         }
 
         private void UpdateSizes()
@@ -75,7 +84,8 @@ namespace CallingApp.Maui.Views.Controls
             imageGrid.Layout(new Rect(imageCenterPosition, imageGrid.Bounds.Size)); // This works on Android but does not work on Windows
 
             topLabelDrawable.TextPosition = topLabelPosition;
-            topLabelDrawable.TextTranslationX = -topLabelDrawable.TextSize.Width;
+            if (!isPhonePickedUp)
+                topLabelDrawable.TextTranslationX = -topLabelDrawable.TextSize.Width;
             topLabelGraphicsView.Invalidate();
         }
 
@@ -105,21 +115,24 @@ namespace CallingApp.Maui.Views.Controls
             var animation = new Animation();
 
             animation.Add(0.5, 1, new Animation(v => {
-                topLabelDrawable.TextTranslationX = (float)v;
+                topLabelDrawable.TextTranslationX = (float)v * topLabelDrawable.TextTranslationX;
                 topLabelGraphicsView.Invalidate();
-            }, topLabelDrawable.TextTranslationX, 0));
+            }, 1, 0));
             animation.Add(0, 0.8, new Animation(v => centerLabel.Opacity = v, 1, 0));
             animation.Add(0, 1, new Animation(v => imageGrid.Scale = v, imageGrid.Scale, topImageScale));
-            animation.Add(0, 1, new Animation(v => imageGrid.TranslationX = v, 0, imageTopPosition.X - imageGrid.X));
-            animation.Add(0, 1, new Animation(v => imageGrid.TranslationY = v, 0, imageTopPosition.Y - imageGrid.Y));
+            animation.Add(0, 1, new Animation(v => imageGrid.TranslationX = v * (imageTopPosition.X - imageGrid.X), 0, 1));
+            animation.Add(0, 1, new Animation(v => imageGrid.TranslationY = v * (imageTopPosition.Y - imageGrid.Y), 0, 1));
 
             animation.Commit(this, "TranslationAnimation", length: 700);
 
             await Task.Delay(700);
+            isPhonePickedUp = true;
         }
 
         public async Task OnPhoneHangedUp(bool isOnThePhone)
         {
+            isPhonePickedUp = false;
+
             var animation = new Animation();
 
             animation.Add(0.4, 1, new Animation(v => imageGrid.Opacity = v, 1, 0));
@@ -134,7 +147,7 @@ namespace CallingApp.Maui.Views.Controls
             else
             {
                 animation.Add(0, 0.8, new Animation(v => centerLabel.Opacity = v, 1, 0));
-                animation.Add(0, 1, new Animation(v => imageGrid.Scale = v, imageGrid.Scale, 0, easing: Easing.SpringIn));
+                animation.Add(0, 1, new Animation(v => imageGrid.Scale = v * imageGrid.Scale, 1, 0, easing: Easing.SpringIn));
             }
 
             animation.Commit(this, "HangedUpAnimation", length: 700);
