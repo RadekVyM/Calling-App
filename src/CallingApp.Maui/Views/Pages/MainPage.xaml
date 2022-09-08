@@ -8,8 +8,10 @@
              BackgroundColor="{StaticResource BackgroundColor}">
 
     <Grid BackgroundColor="{StaticResource BackgroundColor}">
-        <Grid x:Name="contentGrid" RowSpacing="0" RowDefinitions="150,20,50,*"
-              Margin="25,0" Padding="{x:Static local:StatusBar.Padding}">
+        <Grid
+            x:Name="contentGrid"
+            RowSpacing="0" RowDefinitions="150,20,50,*"
+            Padding="{x:Static local:StatusBar.Padding}">
             <Grid.Resources>
                 <Style TargetType="{x:Type controls:HidableContentView}">
                     <Setter Property="BackgroundColor" Value="Transparent"/>
@@ -18,9 +20,15 @@
                 </Style>
             </Grid.Resources>
 
-            <ContentView x:Name="whiteBoxView" Grid.Row="3" BackgroundColor="White" Margin="-25,0"/>
+            <ContentView
+                x:Name="whiteBoxView"
+                Grid.Row="3"
+                BackgroundColor="White"
+                Margin="0"/>
 
-            <controls:HidableContentView VerticalOptions="End">
+            <controls:HidableContentView
+                VerticalOptions="End"
+                Margin="25,0" >
                 <StackLayout Orientation="Horizontal" Spacing="0">
                     <StackLayout.Resources>
                         <Style TargetType="{x:Type Label}">
@@ -35,12 +43,18 @@
                 </StackLayout>
             </controls:HidableContentView>
 
-            <controls:HidableContentView Grid.Row="1">
+            <controls:HidableContentView
+                Grid.Row="1"
+                Margin="25,0" >
                 <Label Text="Balance" TextColor="{StaticResource OverlayColor}" FontSize="16"/>
             </controls:HidableContentView>
 
-            <ScrollView Grid.Row="3" VerticalScrollBarVisibility="Never">
-                <StackLayout Spacing="0">
+            <ScrollView
+                Grid.Row="3"
+                VerticalScrollBarVisibility="Default">
+                <StackLayout
+                    Spacing="0"
+                    Margin="25,0" >
                     <StackLayout.Resources>
                         <Style TargetType="{x:Type Label}">
                             <Setter Property="TextColor" Value="{StaticResource OverlayColor}"/>
@@ -179,7 +193,12 @@
                 </StackLayout>
             </ScrollView>
 
-            <ContentView x:Name="whiteGradientBoxView" Grid.Row="3" VerticalOptions="Start" HeightRequest="50">
+            <ContentView
+                x:Name="whiteGradientBoxView"
+                Grid.Row="3"
+                Margin="25,0" 
+                VerticalOptions="Start"
+                HeightRequest="50">
                 <ContentView.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <GradientStop Color="White"
@@ -192,7 +211,11 @@
                 </ContentView.Background>
             </ContentView>
 
-            <controls:HidableContentView Grid.Row="2" VerticalOptions="End" TranslationY="23">
+            <controls:HidableContentView
+                Grid.Row="2"
+                Margin="25,0" 
+                VerticalOptions="End"
+                TranslationY="23">
                 <Grid ColumnDefinitions="46,46" ColumnSpacing="25">
                     <Grid.Resources>
                         <Style TargetType="{x:Type Path}">

@@ -25,6 +25,10 @@
             <local:PathGeometryExtension x:Key="CardGeometry" Path="{StaticResource CardPath}"/>
             <local:PathGeometryExtension x:Key="ThreeDotsGeometry" Path="{StaticResource ThreeDotsPath}"/>
             <local:PathGeometryExtension x:Key="PhoneGeometry" Path="{StaticResource PhonePath}"/>
+
+            <Style TargetType="GraphicsView">
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

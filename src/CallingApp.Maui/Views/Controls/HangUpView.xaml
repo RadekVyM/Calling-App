@@ -5,12 +5,16 @@
              xmlns:local="clr-namespace:CallingApp.Maui.Views.Controls">
 
     <Grid>
-        <Ellipse x:Name="ellipse"
-                 Stroke="{StaticResource HangUpButtonBrush}"/>
+        <Ellipse
+            x:Name="ellipse"
+            Stroke="{StaticResource HangUpButtonBrush}"/>
 
-        <GraphicsView x:Name="graphicsView" BackgroundColor="Transparent" SizeChanged="GraphicsViewSizeChanged"
-                      HorizontalOptions="Fill" VerticalOptions="Fill"
-                      InputTransparent="True"/>
+        <GraphicsView
+            x:Name="graphicsView"
+            BackgroundColor="Transparent"
+            SizeChanged="GraphicsViewSizeChanged"
+            HorizontalOptions="Fill" VerticalOptions="Fill"
+            InputTransparent="True"/>
 
         <Grid.GestureRecognizers>
             <PanGestureRecognizer PanUpdated="PanUpdated"/>

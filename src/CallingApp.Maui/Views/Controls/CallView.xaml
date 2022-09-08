@@ -6,16 +6,19 @@
              x:Name="thisView">
 
     <Grid RowDefinitions="*,90,100" RowSpacing="0">
-        <GraphicsView x:Name="overlayGraphicsView"
-                      Grid.RowSpan="3" 
-                      InputTransparent="True"
-                      HorizontalOptions="Fill" VerticalOptions="Fill"
-                      SizeChanged="OverlayGraphicsViewSizeChanged"/>
+        <GraphicsView
+            x:Name="overlayGraphicsView"
+            Grid.RowSpan="3" 
+            InputTransparent="True"
+            HorizontalOptions="Fill" VerticalOptions="Fill"
+            SizeChanged="OverlayGraphicsViewSizeChanged"/>
 
-        <HorizontalStackLayout x:Name="buttonsStack" Grid.Row="1" 
-                               HorizontalOptions="Center"
-                               Margin="30,0" Spacing="60"
-                               SizeChanged="ButtonsStackSizeChanged">
+        <HorizontalStackLayout
+            x:Name="buttonsStack"
+            Grid.Row="1" 
+            HorizontalOptions="Center"
+            Margin="30,0" Spacing="60"
+            SizeChanged="ButtonsStackSizeChanged">
             <HorizontalStackLayout.Resources>
                 <Style TargetType="{x:Type Path}">
                     <Setter Property="InputTransparent" Value="True"/>
@@ -65,10 +68,12 @@
             </Grid>
         </HorizontalStackLayout>
 
-        <Grid x:Name="timeGrid" ColumnDefinitions="100,19,100" ColumnSpacing="0"
-              Margin="0,120,0,0"
-              HorizontalOptions="Center" VerticalOptions="Start" 
-              SizeChanged="TimeGridSizeChanged">
+        <Grid
+            x:Name="timeGrid"
+            ColumnDefinitions="100,19,100" ColumnSpacing="0"
+            Margin="0,120,0,0"
+            HorizontalOptions="Center" VerticalOptions="Start" 
+            SizeChanged="TimeGridSizeChanged">
             <Grid.Resources>
                 <Style TargetType="{x:Type Label}">
                     <Setter Property="FontFamily" Value="TimeFont"/>
@@ -84,11 +89,18 @@
             <Label x:Name="secondsLabel" Grid.Column="2" HorizontalOptions="Fill" HorizontalTextAlignment="Start" Text="00"/>
         </Grid>
 
-        <local:AvatarView x:Name="avatarView" Grid.RowSpan="3" BindingContext="{Binding Source={x:Reference thisView}, Path=BindingContext.CurrentPerson}"/>
+        <local:AvatarView
+            x:Name="avatarView"
+            Grid.RowSpan="3"
+            BindingContext="{Binding Source={x:Reference thisView}, Path=BindingContext.CurrentPerson}"/>
 
-        <local:HangUpView x:Name="hangUpView" Grid.Row="2"
-                          HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,20" 
-                          WidthRequest="80" HeightRequest="80"
-                          Interacted="HangUpViewInteracted" BindingContext="{Binding Source={x:Reference thisView}, Path=BindingContext}"/>
+        <local:HangUpView
+            x:Name="hangUpView"
+            Grid.Row="2"
+            HorizontalOptions="Center" VerticalOptions="End"
+            Margin="0,0,0,20" 
+            WidthRequest="80" HeightRequest="80"
+            Interacted="HangUpViewInteracted"
+            BindingContext="{Binding Source={x:Reference thisView}, Path=BindingContext}"/>
     </Grid>
 </ContentView>
