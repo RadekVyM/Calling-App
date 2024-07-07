@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ContentView x:Class="CallingApp.Maui.Views.Controls.CallView"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:CallingApp.Maui.Views.Controls"
-             x:Name="thisView">
+<ContentView
+    x:Class="CallingApp.Maui.Views.Controls.CallView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:CallingApp.Maui.Views.Controls"
+    xmlns:simpleCore="clr-namespace:SimpleToolkit.Core;assembly=SimpleToolkit.Core"
+    x:Name="thisView">
 
-    <Grid RowDefinitions="*,90,100" RowSpacing="0">
+    <Grid RowDefinitions="*, 90, 100" RowSpacing="0">
         <GraphicsView
             x:Name="overlayGraphicsView"
             Grid.RowSpan="3" 
@@ -17,61 +19,41 @@
             x:Name="buttonsStack"
             Grid.Row="1" 
             HorizontalOptions="Center"
-            Margin="30,0" Spacing="60"
+            Margin="30, 0" Spacing="60"
             SizeChanged="ButtonsStackSizeChanged">
             <HorizontalStackLayout.Resources>
-                <Style TargetType="{x:Type Path}">
+                <Style TargetType="Path">
                     <Setter Property="InputTransparent" Value="True"/>
                     <Setter Property="Aspect" Value="Uniform"/>
                     <Setter Property="HorizontalOptions" Value="Center"/>
                     <Setter Property="VerticalOptions" Value="Start"/>
-                    <Setter Property="HeightRequest" Value="30"/>
-                    <Setter Property="WidthRequest" Value="30"/>
+                    <Setter Property="HeightRequest" Value="25"/>
+                    <Setter Property="WidthRequest" Value="25"/>
                     <Setter Property="Fill" Value="{StaticResource BackgroundBrush}"/>
                 </Style>
-                <Style TargetType="{x:Type ContentView}">
+                <Style TargetType="simpleCore:ContentButton">
                     <Setter Property="HorizontalOptions" Value="Center"/>
                     <Setter Property="VerticalOptions" Value="Start"/>
                     <Setter Property="HeightRequest" Value="30"/>
                     <Setter Property="WidthRequest" Value="30"/>
-                </Style>
-                <Style TargetType="{x:Type Grid}">
-                    <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
-                    <Setter Property="VerticalOptions" Value="Start"/>
-                </Style>
-                <Style TargetType="{x:Type Button}">
-                    <Setter Property="HorizontalOptions" Value="Center"/>
-                    <Setter Property="VerticalOptions" Value="Start"/>
-                    <Setter Property="HeightRequest" Value="30"/>
-                    <Setter Property="WidthRequest" Value="30"/>
-                    <Setter Property="Background" Value="Transparent"/>
                 </Style>
             </HorizontalStackLayout.Resources>
 
-            <Grid>
-                <Button/>
-                <ContentView>
-                    <Path Data="{StaticResource DialerGeometry}"/>
-                </ContentView>
-            </Grid>
-            <Grid>
-                <Button/>
-                <ContentView>
-                    <Path Data="{StaticResource SpeakerGeometry}"/>
-                </ContentView>
-            </Grid>
-            <Grid>
-                <Button/>
-                <ContentView>
-                    <Path Data="{StaticResource PersonGeometry}"/>
-                </ContentView>
-            </Grid>
+            <simpleCore:ContentButton>
+                <Path Data="{StaticResource DialerGeometry}"/>
+            </simpleCore:ContentButton>
+            <simpleCore:ContentButton>
+                <Path Data="{StaticResource SpeakerGeometry}"/>
+            </simpleCore:ContentButton>
+            <simpleCore:ContentButton>
+                <Path Data="{StaticResource PersonGeometry}"/>
+            </simpleCore:ContentButton>
         </HorizontalStackLayout>
 
         <Grid
             x:Name="timeGrid"
-            ColumnDefinitions="100,19,100" ColumnSpacing="0"
-            Margin="0,120,0,0"
+            ColumnDefinitions="100, 19, 100" ColumnSpacing="0"
+            Margin="0, 120, 0, 0"
             HorizontalOptions="Center" VerticalOptions="Start" 
             SizeChanged="TimeGridSizeChanged">
             <Grid.Resources>
@@ -85,7 +67,7 @@
             </Grid.Resources>
 
             <Label x:Name="minutesLabel" HorizontalOptions="Fill" HorizontalTextAlignment="End" Text="00"/>
-            <Label Grid.Column="1" Text=":" Margin="0,9,0,0"/>
+            <Label Grid.Column="1" Text=":" Margin="0, 9, 0, 0"/>
             <Label x:Name="secondsLabel" Grid.Column="2" HorizontalOptions="Fill" HorizontalTextAlignment="Start" Text="00"/>
         </Grid>
 
@@ -98,7 +80,7 @@
             x:Name="hangUpView"
             Grid.Row="2"
             HorizontalOptions="Center" VerticalOptions="End"
-            Margin="0,0,0,20" 
+            Margin="0, 0, 0, 20" 
             WidthRequest="80" HeightRequest="80"
             Interacted="HangUpViewInteracted"
             BindingContext="{Binding Source={x:Reference thisView}, Path=BindingContext}"/>
