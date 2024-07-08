@@ -2,6 +2,8 @@
 
 **.NET MAUI** implementation of [majority wallet & calling](https://dribbble.com/shots/14796428-majority-wallet-calling) design by [Hampus Öhman](https://dribbble.com/HampusOhman).
 
+https://github.com/RadekVyM/Calling-App/assets/65116078/6b37ddb6-90eb-4f86-98f3-875208f54535
+
 This project demonstrates how to create .NET MAUI apps with custom graphics effects and many animations.
 
 ## Original design
