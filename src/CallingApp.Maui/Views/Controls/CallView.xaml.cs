@@ -32,18 +32,35 @@ public partial class CallView : ContentView
     bool isHangedUp = true;
     double waveVectorScale = 0;
     double maxWaveVectorScale => 0.4f;
-    Point overlayTopLeftPoint = new Point(0, 0);
-    Point minOverlayTopLeftPoint => new Point(0, Math.Min(0.7d * overlayGraphicsView.Height, overlayGraphicsView.Height - 200));
-    Point maxOverlayTopLeftPoint => new Point(0, minOverlayTopLeftPoint.Y + 20);
-    Point overlayTopRightPoint = new Point(0, 0);
-    Point minOverlayTopRightPoint => new Point(overlayGraphicsView.Width, (7d / 24d) * overlayGraphicsView.Height);
-    Point maxOverlayTopRightPoint => new Point(overlayGraphicsView.Width, (2d / 5d) * overlayGraphicsView.Height);
-    DateTime startTime = new DateTime();
+    Point overlayTopLeftPoint = new(0, 0);
+    Point minOverlayTopLeftPoint => new(0, Math.Min(0.7d * overlayGraphicsView.Height, overlayGraphicsView.Height - 200));
+    Point maxOverlayTopLeftPoint => new(0, minOverlayTopLeftPoint.Y + 20);
+    Point overlayTopRightPoint = new(0, 0);
+    Point minOverlayTopRightPoint => new(overlayGraphicsView.Width, (7d / 24d) * overlayGraphicsView.Height);
+    Point maxOverlayTopRightPoint => new(overlayGraphicsView.Width, (2d / 5d) * overlayGraphicsView.Height);
+    DateTime startTime = new();
 
     OverlayDrawable overlayDrawable;
 
     #endregion
 
+    public static readonly BindableProperty SafeAreaProperty =
+        BindableProperty.Create(nameof(SafeArea), typeof(Thickness), typeof(CallView), propertyChanged: static (bindable, oldValue, newValue) =>
+        {
+            var view = bindable as CallView;
+
+            if (newValue is Thickness safeArea)
+            {
+                view.avatarView.Margin = safeArea;
+                view.hangUpView.Margin = new Thickness(safeArea.Left, 0, safeArea.Right, safeArea.Bottom + 20);
+            }
+        });
+
+    public Thickness SafeArea
+    {
+        get => (Thickness)GetValue(SafeAreaProperty);
+        set => SetValue(SafeAreaProperty, value);
+    }
 
     #region Constructor
 
@@ -187,21 +204,34 @@ public partial class CallView : ContentView
     {
         var bottomLeftPointOffsetY = 80;
 
-        Animation animation = new Animation();
-
-        animation.Add(0, 1, new Animation(v =>
+        Animation animation = new Animation
         {
-            overlayTopLeftPoint = new Point(maxOverlayTopLeftPoint.X, v);
-        }, overlayTopLeftPoint.Y, overlayGraphicsView.Height + bottomLeftPointOffsetY));
-        animation.Add(0, 1, new Animation(v =>
-        {
-            overlayTopRightPoint = new Point(maxOverlayTopRightPoint.X, v);
-        }, overlayTopRightPoint.Y, overlayGraphicsView.Height + 20));
-        animation.Add(0, 1, new Animation(v =>
-        {
-            overlayDrawable.OverlayPath = GetQuadrAnglePathF(bottomLeftPointOffsetY);
-            overlayGraphicsView.Invalidate();
-        }));
+            {
+                0,
+                1,
+                new Animation(v =>
+                {
+                    overlayTopLeftPoint = new Point(maxOverlayTopLeftPoint.X, v);
+                }, overlayTopLeftPoint.Y, overlayGraphicsView.Height + bottomLeftPointOffsetY)
+            },
+            {
+                0,
+                1,
+                new Animation(v =>
+                {
+                    overlayTopRightPoint = new Point(maxOverlayTopRightPoint.X, v);
+                }, overlayTopRightPoint.Y, overlayGraphicsView.Height + 20)
+            },
+            {
+                0,
+                1,
+                new Animation(v =>
+                {
+                    overlayDrawable.OverlayPath = GetQuadrAnglePathF(bottomLeftPointOffsetY);
+                    overlayGraphicsView.Invalidate();
+                })
+            }
+        };
 
         animation.Commit(overlayGraphicsView, QuadrangleCollapseAnimationName, length: lengthOfAnimation, easing: Easing.CubicOut);
 
@@ -231,7 +261,7 @@ public partial class CallView : ContentView
 
     private async Task StartTriangleToQuadrangleAnimation(uint lengthOfAnimation = 800)
     {
-        Animation animation = CreateTriangelToQuadrangleAnimation();
+        var animation = CreateTriangelToQuadrangleAnimation();
 
         animation.Commit(overlayGraphicsView, TriangleToQuadrangleAnimationName, length: lengthOfAnimation, easing: Easing.CubicOut);
 
@@ -243,7 +273,7 @@ public partial class CallView : ContentView
         overlayGraphicsView.IsVisible = true;
 
         // Show/hide the gray triangular overlay
-        Animation animation = new Animation(v =>
+        var animation = new Animation(v =>
         {
             var path = new PathF();
 
@@ -279,7 +309,7 @@ public partial class CallView : ContentView
             minutesLabel.Text = "00";
         }
 
-        Animation animation = new Animation();
+        var animation = new Animation();
 
         // Show/hide buttons and the time element
         animation.Add(0, 1, new Animation(v => buttonsStack.Opacity = v, show ? 0 : 1, show ? 1 : 0));
@@ -324,9 +354,9 @@ public partial class CallView : ContentView
 
     private Animation CreateTriangelToQuadrangleAnimation()
     {
+        // Animate the overlay from triangle to quadrangle
         var animation = new Animation();
 
-        // Animate the overlay from triangle to quadrangle
         animation.Add(0, 1, new Animation(v =>
         {
             overlayTopLeftPoint = new Point(maxOverlayTopLeftPoint.X, v);
@@ -406,7 +436,7 @@ public partial class CallView : ContentView
             path.QuadTo(fPoint, sPoint);
         }
 
-        Point lastPoint = new Point(overlayGraphicsView.Width + (pointToPointVector.X * numberOfHiddenPoints), pointToPointVector.X * numberOfHiddenPoints);
+        var lastPoint = new Point(overlayGraphicsView.Width + (pointToPointVector.X * numberOfHiddenPoints), pointToPointVector.X * numberOfHiddenPoints);
 
         path.LineTo(lastPoint);
         path.LineTo(new Point(lastPoint.X, firstPoint.Y));
@@ -432,7 +462,7 @@ public partial class CallView : ContentView
 
     private List<Point> GetAllWavePoints()
     {
-        List<Point> points = new List<Point>();
+        List<Point> points = [];
 
         bool up = true;
         bool onLine = true;
@@ -525,18 +555,11 @@ public partial class CallView : ContentView
 
     #endregion
 
-    class OverlayDrawable : IDrawable
+    class OverlayDrawable(Color overlayColor) : IDrawable
     {
-        readonly Color overlayColor;
+        readonly Color overlayColor = overlayColor;
 
         public PathF OverlayPath { get; set; }
-
-
-        public OverlayDrawable(Color overlayColor)
-        {
-            this.overlayColor = overlayColor;
-        }
-
 
         public void Draw(ICanvas canvas, RectF dirtyRect)
         {

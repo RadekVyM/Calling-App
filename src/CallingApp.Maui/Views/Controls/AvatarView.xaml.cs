@@ -7,13 +7,14 @@ public partial class AvatarView : ContentView
     bool initImageBorderSizeChanged = true;
     bool isPhonePickedUp = false;
 
-    Point imageCenterPosition => new Point((Width - imageBorder.WidthRequest) / 2, (Height - imageBorder.HeightRequest) / 2);
-    Point imageTopPosition = new Point(0, 0);
-    Point topLabelPosition = new Point(0, 0);
+    Point imageCenterPosition => new((Width - imageBorder.WidthRequest) / 2, (Height - imageBorder.HeightRequest) / 2);
+    Point imageTopPosition = new(0, 0);
+    Point topLabelPosition = new(0, 0);
     double topImageSize => 20;
     double topImageScale => topImageSize / imageBorder.Width;
 
-    TopLabelDrawable topLabelDrawable;
+    readonly TopLabelDrawable topLabelDrawable;
+
 
     public AvatarView()
     {
@@ -27,6 +28,7 @@ public partial class AvatarView : ContentView
         topLabelGraphicsView.Drawable = topLabelDrawable;
         topLabelGraphicsView.Invalidate();
     }
+
 
     private void TopLabelDrawableTextSizeUpdated()
     {
@@ -74,7 +76,7 @@ public partial class AvatarView : ContentView
     private void UpdateSizes()
     {
         double spacing = 8;
-        double verticalCenter = StatusBar.Height + 15;
+        double verticalCenter = 15;
         double totalWidth = topImageSize + topLabelDrawable.TextSize.Width + spacing;
 
         imageTopPosition = new Point(((Width - totalWidth) / 2) - ((imageBorder.Width - topImageSize) / 2), verticalCenter - (topImageSize / 2) - ((imageBorder.Height - topImageSize) / 2));

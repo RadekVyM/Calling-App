@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:CallingApp.Maui"
-    xmlns:core="clr-namespace:CallingApp.Core;assembly=CallingApp.Core"
+    xmlns:viewModels="clr-namespace:CallingApp.Core.ViewModels;assembly=CallingApp.Core"
     xmlns:controls="clr-namespace:CallingApp.Maui.Views.Controls"
     xmlns:simpleCore="clr-namespace:SimpleToolkit.Core;assembly=SimpleToolkit.Core"
     BackgroundColor="{StaticResource BackgroundColor}">
@@ -32,12 +32,17 @@
         </Style>
         <Style Class="AvatarImageBorder" TargetType="Border">
             <Setter Property="StrokeShape" Value="{RoundRectangle CornerRadius=25}"/>
-            <Setter Property="Stroke" Value="{StaticResource OverlayBrush}"/>
             <Setter Property="StrokeThickness" Value="2"/>
+            <Setter Property="Stroke" Value="{StaticResource OverlayBrush}"/>
+            <Setter Property="Background" Value="{StaticResource OverlayBrush}"/>
+            <Setter Property="WidthRequest" Value="50"/>
+            <Setter Property="HeightRequest" Value="50"/>
         </Style>
         <Style Class="AvatarImage" TargetType="Image">
             <Setter Property="Aspect" Value="AspectFill"/>
-            <Setter Property="Background" Value="White"/>
+            <Setter Property="Background" Value="{StaticResource OverlayBrush}"/>
+            <!-- TODO: Border does not clip the image properly on Android -->
+            <Setter Property="Clip" Value="{EllipseGeometry Center='23,23', RadiusX='23', RadiusY='23'}"/>
         </Style>
     </ContentPage.Resources>
         
@@ -45,8 +50,7 @@
         BackgroundColor="{StaticResource BackgroundColor}">
         <Grid
             x:Name="contentGrid"
-            RowSpacing="0" RowDefinitions="150, 20, 50, *"
-            Padding="{x:Static local:StatusBar.Padding}">
+            RowSpacing="0" RowDefinitions="150, 20, 50, *">
             <Grid.Resources>
                 <Style TargetType="controls:HidableContentView">
                     <Setter Property="BackgroundColor" Value="Transparent"/>
@@ -62,8 +66,9 @@
                 Margin="0"/>
 
             <controls:HidableContentView
+                x:Name="balanceValueCotnainer"
                 VerticalOptions="End"
-                Margin="25, 0" >
+                Margin="25, 0">
                 <StackLayout Orientation="Horizontal" Spacing="0">
                     <StackLayout.Resources>
                         <Style TargetType="Label">
@@ -84,8 +89,9 @@
             </controls:HidableContentView>
 
             <controls:HidableContentView
+                x:Name="balanceCotnainer"
                 Grid.Row="1"
-                Margin="25, 0" >
+                Margin="25, 0">
                 <Label
                     Text="Balance"
                     TextColor="{StaticResource OverlayColor}"
@@ -93,6 +99,7 @@
             </controls:HidableContentView>
 
             <ScrollView
+                x:Name="listScrollView"
                 Grid.Row="3"
                 VerticalScrollBarVisibility="Default">
                 <VerticalStackLayout
@@ -138,6 +145,7 @@
                                                 <Setter Property="StrokeShape" Value="{RoundRectangle CornerRadius=20}"/>
                                                 <Setter Property="VerticalOptions" Value="Center"/>
                                                 <Setter Property="Background" Value="{StaticResource PersonButtonBrush}"/>
+                                                <Setter Property="StrokeThickness" Value="0"/>
                                             </Style>
                                         </Grid.Resources>
                                         
@@ -155,7 +163,7 @@
 
                                         <simpleCore:ContentButton
                                             Grid.Column="2"
-                                            Command="{Binding CallPersonCommand, Source={RelativeSource AncestorType={x:Type core:MainPageViewModel}}}"
+                                            Command="{Binding CallPersonCommand, Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}}"
                                             CommandParameter="{Binding .}"
                                             Clicked="CallButtonClicked">
                                             <Path Data="{StaticResource PhoneGeometry}"/>
@@ -260,7 +268,8 @@
                 Grid.Row="3"
                 Margin="25, 0" 
                 VerticalOptions="Start"
-                HeightRequest="50">
+                HeightRequest="50"
+                InputTransparent="True">
                 <ContentView.Background>
                     <LinearGradientBrush StartPoint="0, 0" EndPoint="0, 1">
                         <GradientStop
@@ -277,6 +286,7 @@
             </ContentView>
 
             <controls:HidableContentView
+                x:Name="buttonsContainer"
                 Grid.Row="2"
                 Margin="25, 0" 
                 VerticalOptions="End"

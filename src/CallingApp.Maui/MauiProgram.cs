@@ -24,6 +24,15 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
+#if ANDROID || IOS
+        builder.DisplayContentBehindBars();
+#endif
+
+#if ANDROID
+        builder.SetDefaultNavigationBarAppearance(Colors.Transparent);
+        builder.SetDefaultStatusBarAppearance(Colors.Transparent, false);
+#endif
+
         return builder.Build();
     }
 }

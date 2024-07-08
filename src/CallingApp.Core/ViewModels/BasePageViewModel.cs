@@ -17,19 +17,4 @@ public class BasePageViewModel : IBasePageViewModel, INotifyPropertyChanged
             System.Diagnostics.Debug.WriteLine(exception.Message);
         }
     }
-
-    public async virtual Task OnPageDisappearing()
-    {
-        await Task.CompletedTask;
-    }
-
-    public async virtual Task OnPageCreated(params object[] parameters)
-    {
-        await Task.CompletedTask;
-    }
-
-    public async virtual Task OnPageAppearing()
-    {
-        await Task.CompletedTask;
-    }
 }

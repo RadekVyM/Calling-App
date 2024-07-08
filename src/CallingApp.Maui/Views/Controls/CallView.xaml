@@ -7,7 +7,7 @@
     xmlns:simpleCore="clr-namespace:SimpleToolkit.Core;assembly=SimpleToolkit.Core"
     x:Name="thisView">
 
-    <Grid RowDefinitions="*, 90, 100" RowSpacing="0">
+    <Grid RowDefinitions="*, 90, auto" RowSpacing="0">
         <GraphicsView
             x:Name="overlayGraphicsView"
             Grid.RowSpan="3" 
@@ -36,6 +36,7 @@
                     <Setter Property="VerticalOptions" Value="Start"/>
                     <Setter Property="HeightRequest" Value="30"/>
                     <Setter Property="WidthRequest" Value="30"/>
+                    <Setter Property="StrokeThickness" Value="0"/>
                 </Style>
             </HorizontalStackLayout.Resources>
 
@@ -52,9 +53,11 @@
 
         <Grid
             x:Name="timeGrid"
-            ColumnDefinitions="100, 19, 100" ColumnSpacing="0"
+            ColumnDefinitions="100, 19, 100"
+            ColumnSpacing="0"
             Margin="0, 120, 0, 0"
-            HorizontalOptions="Center" VerticalOptions="Start" 
+            HorizontalOptions="Center"
+            VerticalOptions="Start" 
             SizeChanged="TimeGridSizeChanged">
             <Grid.Resources>
                 <Style TargetType="{x:Type Label}">
@@ -79,9 +82,11 @@
         <local:HangUpView
             x:Name="hangUpView"
             Grid.Row="2"
-            HorizontalOptions="Center" VerticalOptions="End"
-            Margin="0, 0, 0, 20" 
-            WidthRequest="80" HeightRequest="80"
+            HorizontalOptions="Center"
+            VerticalOptions="Start"
+            WidthRequest="80"
+            HeightRequest="80"
+            Margin="0, 0, 0, 20"
             Interacted="HangUpViewInteracted"
             BindingContext="{Binding Source={x:Reference thisView}, Path=BindingContext}"/>
     </Grid>
