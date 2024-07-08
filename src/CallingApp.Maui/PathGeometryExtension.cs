@@ -1,23 +1,16 @@
 ﻿using Microsoft.Maui.Controls.Shapes;
 
-namespace CallingApp.Maui
+namespace CallingApp.Maui;
+
+public class PathGeometryExtension : IMarkupExtension<Geometry>
 {
-    public class PathGeometryExtension : IMarkupExtension<Geometry>
-    {
-        PathGeometryConverter pathGeometryConverter = new PathGeometryConverter();
+    readonly PathGeometryConverter pathGeometryConverter = new();
 
-        public string Path { get; set; }
+    public string Path { get; set; }
 
-        public Geometry ProvideValue(IServiceProvider serviceProvider)
-        {
-            var path = pathGeometryConverter.ConvertFromInvariantString(Path) as Geometry;
+    public Geometry ProvideValue(IServiceProvider serviceProvider) =>
+        pathGeometryConverter.ConvertFromInvariantString(Path) as Geometry;
 
-            return path;
-        }
-
-        object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider)
-        {
-            return (this as IMarkupExtension<Geometry>).ProvideValue(serviceProvider);
-        }
-    }
+    object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider) =>
+        (this as IMarkupExtension<Geometry>).ProvideValue(serviceProvider);
 }

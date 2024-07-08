@@ -1,49 +1,48 @@
-﻿namespace CallingApp.Maui.Views.Controls
+﻿namespace CallingApp.Maui.Views.Controls;
+
+// TODO: When issue https://github.com/dotnet/maui/issues/8050 is fixed, use ContentView instead
+public class HidableContentView : Grid
 {
-    // TODO: When issue https://github.com/dotnet/maui/issues/8050 is fixed, use ContentView instead
-    public class HidableContentView : Grid
+    private bool shown = true;
+
+    public HidableContentView()
     {
-        private bool shown = true;
+        IsClippedToBounds = true;
+        SizeChanged += HidableContentViewSizeChanged;
+    }
 
-        public HidableContentView()
+    private void HidableContentViewSizeChanged(object sender, EventArgs e)
+    {
+        foreach (var child in Children)
         {
-            IsClippedToBounds = true;
-            SizeChanged += HidableContentViewSizeChanged;
+            if (child is View view)
+                view.TranslationY = shown ? 0 : view.Height;
         }
+    }
 
-        private void HidableContentViewSizeChanged(object sender, EventArgs e)
+    public void HideContent()
+    {
+        var animation = new Animation();
+        foreach (var child in Children)
         {
-            foreach (var child in Children)
-            {
-                if (child is View view)
-                    view.TranslationY = shown ? 0 : view.Height;
-            }
+            if (child is View view)
+                animation.Add(0, 1, new Animation(v => view.TranslationY = v, 0, view.Height));
         }
+        animation.Commit(this, "HideContentAnimation", length: 500, easing: Easing.SinIn);
 
-        public void HideContent()
+        shown = false;
+    }
+
+    public void ShowContent()
+    {
+        var animation = new Animation();
+        foreach (var child in Children)
         {
-            var animation = new Animation();
-            foreach (var child in Children)
-            {
-                if (child is View view)
-                    animation.Add(0, 1, new Animation(v => view.TranslationY = v, 0, view.Height));
-            }
-            animation.Commit(this, "HideContentAnimation", length: 500, easing: Easing.SinIn);
-
-            shown = false;
+            if (child is View view)
+                animation.Add(0, 1, new Animation(v => view.TranslationY = v, view.Height, 0));
         }
+        animation.Commit(this, "ShowContentAnimation", length: 500, easing: Easing.SinIn);
 
-        public void ShowContent()
-        {
-            var animation = new Animation();
-            foreach (var child in Children)
-            {
-                if (child is View view)
-                    animation.Add(0, 1, new Animation(v => view.TranslationY = v, view.Height, 0));
-            }
-            animation.Commit(this, "ShowContentAnimation", length: 500, easing: Easing.SinIn);
-
-            shown = true;
-        }
+        shown = true;
     }
 }
