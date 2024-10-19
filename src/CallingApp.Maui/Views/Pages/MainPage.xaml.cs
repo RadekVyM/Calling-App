@@ -37,8 +37,7 @@ public partial class MainPage : ContentPage
         contentGrid.Padding = new Thickness(0, thickness.Top, 0, 0);
         listScrollView.Padding = new Thickness(thickness.Left, 0, thickness.Right, thickness.Bottom);
         callView.SafeArea = thickness;
-        balanceValueCotnainer.Margin = sideMargin;
-        balanceCotnainer.Margin = sideMargin;
+        titleCotnainer.Margin = sideMargin;
         buttonsContainer.Margin = sideMargin;
     }
 

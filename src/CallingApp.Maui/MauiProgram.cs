@@ -12,10 +12,10 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
             {
-                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("Gabarito-Medium.ttf", "RegularFont");
+                fonts.AddFont("Gabarito-SemiBold.ttf", "SemiBoldFont");
+                fonts.AddFont("Gabarito-Bold.ttf", "BoldFont");
                 fonts.AddFont("Anton.ttf", "TimeFont");
-                fonts.AddFont("AccidentalPresidency.ttf", "PriceFont");
             });
 
         builder.UseSimpleToolkit();

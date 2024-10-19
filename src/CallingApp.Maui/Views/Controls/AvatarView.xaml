@@ -15,8 +15,8 @@
                 VerticalOptions="Start" HorizontalOptions="Start"
                 HeightRequest="80"
                 WidthRequest="80"
-                Background="{StaticResource OverlayBrush}"
-                Stroke="{StaticResource OverlayBrush}"
+                Background="{StaticResource PrimaryBrush}"
+                Stroke="{StaticResource PrimaryBrush}"
                 StrokeThickness="4"
                 StrokeShape="{RoundRectangle CornerRadius=40}">
                 <Image
@@ -33,7 +33,7 @@
 
         <Label
             x:Name="centerLabel" 
-            TextColor="{StaticResource BackgroundColor}"
+            TextColor="{StaticResource SurfaceContainer}"
             FontSize="17"
             HorizontalOptions="Fill" VerticalOptions="Center"
             HorizontalTextAlignment="Center"

@@ -18,6 +18,7 @@ public partial class CallView : ContentView
     bool initButtonsStackSizeChanged = true;
     bool initTimeGridSizeChanged = true;
 
+    double initialButtonsStackTranslation => -buttonsStack.Height * 0.75;
     int numberOfPoints => 22;
     int numberOfHiddenPoints => 4;
     Point upVector;
@@ -52,7 +53,7 @@ public partial class CallView : ContentView
             if (newValue is Thickness safeArea)
             {
                 view.avatarView.Margin = safeArea;
-                view.hangUpView.Margin = new Thickness(safeArea.Left, 0, safeArea.Right, safeArea.Bottom + 20);
+                view.hangUpView.Margin = new Thickness(safeArea.Left, 0, safeArea.Right, safeArea.Bottom + 60);
             }
         });
 
@@ -83,7 +84,7 @@ public partial class CallView : ContentView
         upVector = new Point(0, 0);
         downVector = new Point(0, 0);
 
-        App.Current.Resources.TryGetValue("OverlayColor", out object overlayColor);
+        App.Current.Resources.TryGetValue("Primary", out object overlayColor);
 
         overlayDrawable = new OverlayDrawable(overlayColor as Color) { OverlayPath = new PathF() };
 
@@ -300,7 +301,7 @@ public partial class CallView : ContentView
             // Set default values
             buttonsStack.IsVisible = true;
             buttonsStack.Opacity = 0;
-            buttonsStack.TranslationY = -buttonsStack.Height;
+            buttonsStack.TranslationY = initialButtonsStackTranslation;
             timeGrid.IsVisible = true;
             timeGrid.Opacity = 0;
             timeGrid.TranslationY = timeGrid.Height;
@@ -314,7 +315,7 @@ public partial class CallView : ContentView
         // Show/hide buttons and the time element
         animation.Add(0, 1, new Animation(v => buttonsStack.Opacity = v, show ? 0 : 1, show ? 1 : 0));
         if (show)
-            animation.Add(0, 1, new Animation(v => buttonsStack.TranslationY = v, show ? -buttonsStack.Height : 0, show ? 0 : -buttonsStack.Height));
+            animation.Add(0, 1, new Animation(v => buttonsStack.TranslationY = v, show ? initialButtonsStackTranslation : 0, show ? 0 : initialButtonsStackTranslation));
         animation.Add(show ? 0.6 : 0, show ? 1 : 0.6, new Animation(v => timeGrid.Opacity = v, show ? 0 : 1, show ? 1 : 0));
         animation.Add(show ? 0.6 : 0, show ? 1 : 0.6, new Animation(v => timeGrid.TranslationY = v, show ? timeGrid.Height / 2 : 0, show ? 0 : timeGrid.Height / 2));
 

@@ -44,7 +44,7 @@ public partial class HangUpView : ContentView
         var defaultTopTrianglePosition = new Point(defaulArcPosition.X + arcThickness, defaulArcPosition.Y + arcRadius + 1);
         var defaultBottomTrianglePosition = new Point(defaultTopTrianglePosition.X, defaultTopTrianglePosition.Y + triangleHeight);
 
-        App.Current.Resources.TryGetValue("OverlayColor", out object overlayColor);
+        App.Current.Resources.TryGetValue("Primary", out object overlayColor);
 
         drawable = new HangupDrawable(
             (float)arcRadius,
@@ -151,7 +151,6 @@ public partial class HangUpView : ContentView
                 new Animation(v =>
                 {
                     Scale = v;
-                    ellipse.Clip = new EllipseGeometry { Center = new Point(Width / 2, Height / 2), RadiusX = Width / 2, RadiusY = Height / 2 };
                 }, 1.4, 1)
             },
             { 0, 0.7, new Animation(v => ellipse.StrokeThickness = v, 0, HeightRequest / 2) },

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Grid
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:simpleCore="clr-namespace:SimpleToolkit.Core;assembly=SimpleToolkit.Core"
+    xmlns:viewModels="clr-namespace:CallingApp.Core.ViewModels;assembly=CallingApp.Core"
+    x:Class="CallingApp.Maui.Views.Controls.ContactView"
+    ColumnDefinitions="40, *, 36, 36"
+    ColumnSpacing="15"
+    VerticalOptions="Center">
+
+    <Grid.Resources>
+        <Style TargetType="Path">
+            <Setter Property="Aspect" Value="Uniform"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="Fill" Value="{StaticResource OnSecondaryBrush}"/>
+            <Setter Property="HeightRequest" Value="14"/>
+            <Setter Property="WidthRequest" Value="14"/>
+        </Style>
+        <Style TargetType="simpleCore:ContentButton">
+            <Setter Property="HeightRequest" Value="36"/>
+            <Setter Property="WidthRequest" Value="36"/>
+            <Setter Property="StrokeShape" Value="{RoundRectangle CornerRadius=10}"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+            <Setter Property="StrokeThickness" Value="0"/>
+        </Style>
+        <Style Class="AvatarImageBorder" TargetType="Border">
+            <Setter Property="StrokeShape" Value="{RoundRectangle CornerRadius=10}"/>
+            <Setter Property="StrokeThickness" Value="1.5"/>
+            <Setter Property="Stroke" Value="{StaticResource SecondaryBrush}"/>
+            <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+            <Setter Property="WidthRequest" Value="40"/>
+            <Setter Property="HeightRequest" Value="40"/>
+        </Style>
+        <Style Class="AvatarImage" TargetType="Image">
+            <Setter Property="Aspect" Value="AspectFill"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+            <!-- TODO: Border does not clip the image properly on Android -->
+            <Setter Property="Clip" Value="{RoundRectangleGeometry CornerRadius=10, Rect={Rect Width=37, Height=37}}"/>
+        </Style>
+    </Grid.Resources>
+    
+    <Border
+        StyleClass="AvatarImageBorder">
+        <Image
+            StyleClass="AvatarImage"
+            Source="{Binding Image}" />
+    </Border>
+
+    <Label
+        Grid.Column="1"
+        Text="{Binding Name}" FontSize="16" 
+        VerticalOptions="Center"/>
+
+    <simpleCore:ContentButton
+        x:Name="callButton"
+        Grid.Column="3"
+        Command="{Binding CallPersonCommand, Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}}"
+        CommandParameter="{Binding .}">
+        <Path Data="{StaticResource PhoneGeometry}"/>
+    </simpleCore:ContentButton>
+</Grid>

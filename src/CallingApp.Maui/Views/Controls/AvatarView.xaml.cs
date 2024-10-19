@@ -1,4 +1,5 @@
 ﻿using CallingApp.Core.Models;
+using Microsoft.Maui.Controls.Shapes;
 
 namespace CallingApp.Maui.Views.Controls;
 
@@ -20,7 +21,7 @@ public partial class AvatarView : ContentView
     {
         InitializeComponent();
 
-        App.Current.Resources.TryGetValue("OverlayColor", out object overlayColor);
+        App.Current.Resources.TryGetValue("Primary", out object overlayColor);
         topLabelDrawable = new TopLabelDrawable(17, overlayColor as Color);
 
         topLabelDrawable.TextSizeUpdated += TopLabelDrawableTextSizeUpdated;
@@ -32,7 +33,7 @@ public partial class AvatarView : ContentView
 
     private void TopLabelDrawableTextSizeUpdated()
     {
-        if (BindingContext is Person person)
+        if (BindingContext is Core.Models.Contact person)
         {
             topLabelDrawable.Text = person.Name;
             topLabelGraphicsView.Invalidate();
@@ -45,7 +46,7 @@ public partial class AvatarView : ContentView
     {
         base.OnBindingContextChanged();
 
-        if (BindingContext is Person person)
+        if (BindingContext is Core.Models.Contact person)
         {
             topLabelDrawable.Text = person.Name;
             topLabelGraphicsView.Invalidate();

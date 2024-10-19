@@ -7,7 +7,7 @@
     xmlns:viewModels="clr-namespace:CallingApp.Core.ViewModels;assembly=CallingApp.Core"
     xmlns:controls="clr-namespace:CallingApp.Maui.Views.Controls"
     xmlns:simpleCore="clr-namespace:SimpleToolkit.Core;assembly=SimpleToolkit.Core"
-    BackgroundColor="{StaticResource BackgroundColor}">
+    BackgroundColor="{StaticResource SurfaceContainer}">
 
     <ContentPage.Resources>
         <Style Class="HistoryItemGrid" TargetType="Grid">
@@ -20,7 +20,7 @@
             <Setter Property="Grid.Column" Value="1"/>
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="VerticalOptions" Value="Center"/>
-            <Setter Property="FontFamily" Value="OpenSansRegular" />
+            <Setter Property="FontFamily" Value="RegularFont" />
         </Style>
         <Style Class="HistoryItemPriceLabel" TargetType="Label">
             <Setter Property="Grid.Column" Value="2"/>
@@ -28,29 +28,15 @@
             <Setter Property="FontAttributes" Value="Bold"/>
             <Setter Property="VerticalOptions" Value="Center"/>
             <Setter Property="HorizontalOptions" Value="End"/>
-            <Setter Property="FontFamily" Value="OpenSansRegular" />
-        </Style>
-        <Style Class="AvatarImageBorder" TargetType="Border">
-            <Setter Property="StrokeShape" Value="{RoundRectangle CornerRadius=25}"/>
-            <Setter Property="StrokeThickness" Value="2"/>
-            <Setter Property="Stroke" Value="{StaticResource OverlayBrush}"/>
-            <Setter Property="Background" Value="{StaticResource OverlayBrush}"/>
-            <Setter Property="WidthRequest" Value="50"/>
-            <Setter Property="HeightRequest" Value="50"/>
-        </Style>
-        <Style Class="AvatarImage" TargetType="Image">
-            <Setter Property="Aspect" Value="AspectFill"/>
-            <Setter Property="Background" Value="{StaticResource OverlayBrush}"/>
-            <!-- TODO: Border does not clip the image properly on Android -->
-            <Setter Property="Clip" Value="{EllipseGeometry Center='23,23', RadiusX='23', RadiusY='23'}"/>
+            <Setter Property="FontFamily" Value="RegularFont" />
         </Style>
     </ContentPage.Resources>
         
     <Grid
-        BackgroundColor="{StaticResource BackgroundColor}">
+        BackgroundColor="{StaticResource SurfaceContainer}">
         <Grid
             x:Name="contentGrid"
-            RowSpacing="0" RowDefinitions="150, 20, 50, *">
+            RowSpacing="0" RowDefinitions="150, 50, *">
             <Grid.Resources>
                 <Style TargetType="controls:HidableContentView">
                     <Setter Property="BackgroundColor" Value="Transparent"/>
@@ -61,211 +47,98 @@
 
             <ContentView
                 x:Name="whiteBoxView"
-                Grid.Row="3"
+                Grid.Row="2"
                 BackgroundColor="White"
                 Margin="0"/>
 
             <controls:HidableContentView
-                x:Name="balanceValueCotnainer"
+                x:Name="titleCotnainer"
                 VerticalOptions="End"
                 Margin="25, 0">
-                <StackLayout Orientation="Horizontal" Spacing="0">
-                    <StackLayout.Resources>
-                        <Style TargetType="Label">
-                            <Setter Property="TextColor" Value="{StaticResource OverlayColor}"/>
-                            <Setter Property="VerticalOptions" Value="End"/>
-                            <Setter Property="FontFamily" Value="PriceFont"/>
-                        </Style>
-                    </StackLayout.Resources>
-
-                    <Label
-                        Text="$30"
-                        FontSize="80" />
-                    <Label
-                        Text=".00"
-                        FontSize="40"
-                        Margin="0, 0, 0, 8"/>
-                </StackLayout>
-            </controls:HidableContentView>
-
-            <controls:HidableContentView
-                x:Name="balanceCotnainer"
-                Grid.Row="1"
-                Margin="25, 0">
                 <Label
-                    Text="Balance"
-                    TextColor="{StaticResource OverlayColor}"
-                    FontSize="16"/>
+                    Text="Contacts"
+                    FontSize="45" />
             </controls:HidableContentView>
 
             <ScrollView
                 x:Name="listScrollView"
-                Grid.Row="3"
+                Grid.Row="2"
                 VerticalScrollBarVisibility="Default">
                 <VerticalStackLayout
                     Spacing="0"
                     Margin="25, 0" >
                     <VerticalStackLayout.Resources>
                         <Style TargetType="Label">
-                            <Setter Property="TextColor" Value="{StaticResource OverlayColor}"/>
+                            <Setter Property="TextColor" Value="{StaticResource Primary}"/>
                         </Style>
                     </VerticalStackLayout.Resources>
 
                     <controls:HidableContentView
-                        Margin="0, 60, 0, 24">
+                        Margin="0, 60, 0, 16">
                         <Label
                             Text="CLOSE FRIENDS"
                             FontSize="19"
-                            FontAttributes="Bold"/>
+                            FontFamily="BoldFont"/>
                     </controls:HidableContentView>
 
                     <VerticalStackLayout
-                        BindableLayout.ItemsSource="{Binding People}"
-                        Spacing="20">
+                        BindableLayout.ItemsSource="{Binding CloseFriends}"
+                        Spacing="5">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
                                 <controls:HidableContentView>
-                                    <Grid
-                                        ColumnDefinitions="50, *, 40, 40"
-                                        ColumnSpacing="15"
-                                        VerticalOptions="Center"
-                                        HeightRequest="50">
-                                        <Grid.Resources>
-                                            <Style TargetType="Path">
-                                                <Setter Property="Aspect" Value="Uniform"/>
-                                                <Setter Property="VerticalOptions" Value="Center"/>
-                                                <Setter Property="HorizontalOptions" Value="Center"/>
-                                                <Setter Property="Fill" Value="{StaticResource OverlayBrush}"/>
-                                                <Setter Property="HeightRequest" Value="14"/>
-                                                <Setter Property="WidthRequest" Value="14"/>
-                                            </Style>
-                                            <Style TargetType="simpleCore:ContentButton">
-                                                <Setter Property="HeightRequest" Value="40"/>
-                                                <Setter Property="WidthRequest" Value="40"/>
-                                                <Setter Property="StrokeShape" Value="{RoundRectangle CornerRadius=20}"/>
-                                                <Setter Property="VerticalOptions" Value="Center"/>
-                                                <Setter Property="Background" Value="{StaticResource PersonButtonBrush}"/>
-                                                <Setter Property="StrokeThickness" Value="0"/>
-                                            </Style>
-                                        </Grid.Resources>
-                                        
-                                        <Border
-                                            StyleClass="AvatarImageBorder">
-                                            <Image
-                                                StyleClass="AvatarImage"
-                                                Source="{Binding Image}" />
-                                        </Border>
-
-                                        <Label
-                                            Grid.Column="1"
-                                            Text="{Binding Name}" FontSize="16" 
-                                            VerticalOptions="Center"/>
-
-                                        <simpleCore:ContentButton
-                                            Grid.Column="2"
-                                            Command="{Binding CallPersonCommand, Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}}"
-                                            CommandParameter="{Binding .}"
-                                            Clicked="CallButtonClicked">
-                                            <Path Data="{StaticResource PhoneGeometry}"/>
-                                        </simpleCore:ContentButton>
-                                        <simpleCore:ContentButton
-                                            Grid.Column="3">
-                                            <Path Data="{StaticResource ThreeDotsGeometry}"/>
-                                        </simpleCore:ContentButton>
-                                    </Grid>
+                                    <controls:ContactView
+                                        CallButtonClicked="CallButtonClicked" />
                                 </controls:HidableContentView>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
 
                     <controls:HidableContentView
-                        Margin="0, 45, 0, 0">
+                        Margin="0, 32, 0, 16">
                         <Label
-                            Text="HISTORY"
+                            Text="ALL CONTACTS"
                             FontSize="19"
-                            FontAttributes="Bold"/>
+                            FontFamily="BoldFont"/>
                     </controls:HidableContentView>
 
-                    <controls:HidableContentView
-                        Margin="0, 12, 0, 24">
-                        <Label
-                            Text="Today"
-                            FontSize="16"
-                            Opacity="0.6"/>
-                    </controls:HidableContentView>
-
-                    <controls:HidableContentView>
-                        <Grid
-                            StyleClass="HistoryItemGrid">
-                            <Border
-                                StyleClass="AvatarImageBorder">
-                                <Image
-                                    StyleClass="AvatarImage"
-                                    Source="{Binding Images[0]}" />
-                            </Border>
-                            
-                            <Label
-                                StyleClass="HistoryItemTitleLabel"
-                                Text="Mailchimp" />
-                            <Label
-                                StyleClass="HistoryItemPriceLabel"
-                                Text="$99.00" />
-                        </Grid>
-                    </controls:HidableContentView>
-
-                    <controls:HidableContentView
-                        Margin="0, 20, 0, 0">
-                        <Grid
-                            StyleClass="HistoryItemGrid">
-                            <Border
-                                StyleClass="AvatarImageBorder">
-                                <Image
-                                    StyleClass="AvatarImage"
-                                    Source="{Binding Images[1]}" />
-                            </Border>
-
-                            <Label
-                                StyleClass="HistoryItemTitleLabel"
-                                Text="Acne Studios" />
-                            <Label
-                                StyleClass="HistoryItemPriceLabel"
-                                Text="$234.00" />
-                        </Grid>
-                    </controls:HidableContentView>
-
-                    <controls:HidableContentView
-                        Margin="0, 20, 0, 24">
-                        <Label
-                            Text="Yesterday"
-                            FontSize="16"
-                            Opacity="0.6"/>
-                    </controls:HidableContentView>
-
-                    <controls:HidableContentView
-                        Margin="0, 0, 0, 40">
-                        <Grid
-                            StyleClass="HistoryItemGrid">
-                            <Border
-                                StyleClass="AvatarImageBorder">
-                                <Image
-                                    StyleClass="AvatarImage"
-                                    Source="{Binding Images[2]}" />
-                            </Border>
-
-                            <Label
-                                StyleClass="HistoryItemTitleLabel"
-                                Text="Whole Foods" />
-                            <Label
-                                StyleClass="HistoryItemPriceLabel"
-                                Text="$2.47" />
-                        </Grid>
-                    </controls:HidableContentView>
+                    <VerticalStackLayout
+                        BindableLayout.ItemsSource="{Binding Contacts}"
+                        Spacing="15">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <VerticalStackLayout>
+                                    <controls:HidableContentView>
+                                        <Label
+                                            Text="{Binding Title}"
+                                            TextColor="{StaticResource Secondary}"
+                                            FontSize="16"
+                                            FontFamily="SemiBoldFont"
+                                            Margin="0, 0, 0, 5"
+                                            Padding="0, 1" />
+                                    </controls:HidableContentView>
+                                    <VerticalStackLayout
+                                        BindableLayout.ItemsSource="{Binding Contacts}"
+                                        Spacing="5">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate>
+                                                <controls:HidableContentView>
+                                                    <controls:ContactView
+                                                        CallButtonClicked="CallButtonClicked" />
+                                                </controls:HidableContentView>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </VerticalStackLayout>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>
 
             <ContentView
                 x:Name="whiteGradientBoxView"
-                Grid.Row="3"
+                Grid.Row="2"
                 Margin="25, 0" 
                 VerticalOptions="Start"
                 HeightRequest="50"
@@ -287,38 +160,38 @@
 
             <controls:HidableContentView
                 x:Name="buttonsContainer"
-                Grid.Row="2"
-                Margin="25, 0" 
+                Grid.Row="1"
+                Margin="20, 0" 
                 VerticalOptions="End"
                 TranslationY="23">
-                <Grid ColumnDefinitions="46, 46" ColumnSpacing="25">
+                <Grid ColumnDefinitions="40, 40" ColumnSpacing="16">
                     <Grid.Resources>
                         <Style TargetType="Path">
                             <Setter Property="Aspect" Value="Uniform"/>
                             <Setter Property="InputTransparent" Value="True"/>
                             <Setter Property="VerticalOptions" Value="Center"/>
                             <Setter Property="HorizontalOptions" Value="Center"/>
-                            <Setter Property="HeightRequest" Value="20"/>
-                            <Setter Property="WidthRequest" Value="20"/>
+                            <Setter Property="HeightRequest" Value="15"/>
+                            <Setter Property="WidthRequest" Value="15"/>
                         </Style>
                         <Style TargetType="simpleCore:ContentButton">
                             <Setter Property="VerticalOptions" Value="Center"/>
                             <Setter Property="HorizontalOptions" Value="Center"/>
-                            <Setter Property="HeightRequest" Value="46"/>
-                            <Setter Property="WidthRequest" Value="46"/>
+                            <Setter Property="HeightRequest" Value="40"/>
+                            <Setter Property="WidthRequest" Value="40"/>
                             <Setter Property="StrokeThickness" Value="0"/>
-                            <Setter Property="StrokeShape" Value="{RoundRectangle CornerRadius=23}"/>
+                            <Setter Property="StrokeShape" Value="{RoundRectangle CornerRadius=10}"/>
                         </Style>
                     </Grid.Resources>
 
                     <simpleCore:ContentButton
-                        Background="{StaticResource AddButtonBrush}">
-                        <Path Fill="{StaticResource OverlayBrush}" Data="{StaticResource PlusGeometry}"/>
+                        Background="{StaticResource SecondaryBrush}">
+                        <Path Fill="{StaticResource OnSecondaryBrush}" Data="{StaticResource PlusGeometry}"/>
                     </simpleCore:ContentButton>
                     <simpleCore:ContentButton
                         Grid.Column="1"
-                        Background="{StaticResource OverlayBrush}">
-                        <Path Fill="{StaticResource BackgroundBrush}" Data="{StaticResource CardGeometry}"/>
+                        Background="{StaticResource PrimaryBrush}">
+                        <Path Fill="{StaticResource OnPrimaryBrush}" Data="{StaticResource SearchGeometry}"/>
                     </simpleCore:ContentButton>
                 </Grid>
             </controls:HidableContentView>

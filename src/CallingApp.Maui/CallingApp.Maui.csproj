@@ -36,10 +36,10 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#222326" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#2B2D42" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#222326" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#2B2D42" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -53,17 +53,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\Fonts\AccidentalPresidency.ttf" />
-	  <None Remove="Resources\Fonts\Anton.ttf" />
-	  <None Remove="Resources\Images\acnestudios.jpg" />
-	  <None Remove="Resources\Images\blank.jpg" />
-	  <None Remove="Resources\Images\mailchimp.jpg" />
-	  <None Remove="Resources\Images\rick.jpg" />
-	  <None Remove="Resources\Images\vianey.jpg" />
-	  <None Remove="Resources\Images\wholefoods.jpg" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\CallingApp.Core\CallingApp.Core.csproj" />
 	</ItemGroup>
 
@@ -71,7 +60,7 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="SimpleToolkit.Core" Version="5.0.0" />
+		<PackageReference Include="SimpleToolkit.Core" Version="5.1.2" />
 	</ItemGroup>
 
 </Project>

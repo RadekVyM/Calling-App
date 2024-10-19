@@ -8,7 +8,8 @@
     <Grid>
         <Ellipse
             x:Name="ellipse"
-            Stroke="{StaticResource HangUpButtonBrush}"/>
+            Stroke="{StaticResource TertiaryBrush}"
+            Fill="{StaticResource TertiaryBrush}" />
 
         <GraphicsView
             x:Name="graphicsView"
