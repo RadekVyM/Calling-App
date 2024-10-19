@@ -3,7 +3,7 @@
 **.NET MAUI** prototype of a phone app inspired by the [majority wallet & calling](https://dribbble.com/shots/14796428-majority-wallet-calling) design by [Hampus Öhman](https://dribbble.com/HampusOhman).
 
 
-https://github.com/user-attachments/assets/4992f7cb-378f-4dac-890c-baf96dc36dfc
+https://github.com/user-attachments/assets/0a7eda83-6347-4273-bd10-d3f7790213c4
 
 
 This project demonstrates how to create .NET MAUI apps with custom graphics effects and many animations.
